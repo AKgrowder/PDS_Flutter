@@ -36,6 +36,7 @@ import '../../widgets/custom_image_view.dart';
 import '../../widgets/pagenation.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+
 class ViewCommentScreen extends StatefulWidget {
   final Room_ID;
   final Title;
@@ -127,7 +128,8 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
     String year = date.year.toString();
     String time = DateFormat('h:mm a').format(date);
 
-    String formattedDate = '$day$month $year $time';
+    String formattedDate = '$time';
+    /* $day$month $year */
     return formattedDate;
   }
 
@@ -390,6 +392,11 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                           NeverScrollableScrollPhysics(),
                                                       itemBuilder:
                                                           (context, index) {
+                                                        final isFirstMessageForDate =
+                                                            index == 0 ||
+                                                                _isDifferentDate(
+                                                                    '${AllChatmodelData?.object?.messageOutputList?.content?[index].createdAt}',
+                                                                    '${AllChatmodelData?.object?.messageOutputList?.content?[index].createdAt}');
                                                         DateTime
                                                             parsedDateTime =
                                                             DateTime.parse(
@@ -426,14 +433,376 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                             // });
                                                           });
                                                         } else {}
-                                                        return AllChatmodelData
-                                                                    ?.object
-                                                                    ?.messageOutputList
-                                                                    ?.content?[
-                                                                        index]
-                                                                    .userName !=
-                                                                User_Name
-                                                            ? Padding(
+                                                        return Column(
+                                                          children: [
+                                                            if (isFirstMessageForDate)
+                                                              Container(
+                                                                child: Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                              .all(
+                                                                          8.0),
+                                                                  child: Text(
+                                                                    _formatDate(
+                                                                        '${AllChatmodelData?.object?.messageOutputList?.content?[index].createdAt}'),
+                                                                    style: TextStyle(
+                                                                        color: Color(
+                                                                            0xff5C5C5C),
+                                                                        fontWeight:
+                                                                            FontWeight.bold),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            AllChatmodelData
+                                                                        ?.object
+                                                                        ?.messageOutputList
+                                                                        ?.content?[
+                                                                            index]
+                                                                        .userName !=
+                                                                    User_Name
+                                                                ? Column(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      SizedBox(
+                                                                        height:
+                                                                            10,
+                                                                      ),
+                                                                      AllChatmodelData?.object?.messageOutputList?.content?[index].messageType !=
+                                                                              'IMAGE'
+                                                                          ? Row(
+                                                                              mainAxisAlignment: MainAxisAlignment.start,
+                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                              children: [
+                                                                                // Spacer(),
+                                                                                Padding(
+                                                                                  padding: const EdgeInsets.only(left: 3, right: 0),
+                                                                                  child: GestureDetector(
+                                                                                    onTap: () {
+                                                                                      Navigator.push(context, MaterialPageRoute(
+                                                                                        builder: (context) {
+                                                                                          return ProfileScreen(User_ID: AllChatmodelData?.object?.messageOutputList?.content?[index].userCode ?? "", isFollowing: "");
+                                                                                        },
+                                                                                      ));
+                                                                                    },
+                                                                                    child: AllChatmodelData?.object?.messageOutputList?.content?[index].userProfilePic != null && AllChatmodelData?.object?.messageOutputList?.content?[index].userProfilePic != ""
+                                                                                        ? CustomImageView(
+                                                                                            url: "${AllChatmodelData?.object?.messageOutputList?.content?[index].userProfilePic}",
+                                                                                            height: 20,
+                                                                                            radius: BorderRadius.circular(20),
+                                                                                            width: 20,
+                                                                                            fit: BoxFit.fill,
+                                                                                          )
+                                                                                        : CustomImageView(
+                                                                                            imagePath: ImageConstant.tomcruse,
+                                                                                            height: 20,
+                                                                                          ),
+                                                                                  ),
+                                                                                ),
+                                                                                Flexible(
+                                                                                  child: Padding(
+                                                                                    padding: const EdgeInsets.only(top: 0, left: 3),
+                                                                                    child: Container(
+                                                                                      decoration: BoxDecoration(color: ColorConstant.ChatBackColor, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(8), bottomRight: Radius.circular(8), topRight: Radius.circular(8))),
+                                                                                      child: Padding(
+                                                                                        padding: const EdgeInsets.only(right: 10, left: 10),
+                                                                                        child: Column(
+                                                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                          // mainAxisAlignment: MainAxisAlignment.start,
+                                                                                          children: [
+                                                                                            Padding(
+                                                                                              padding: const EdgeInsets.only(bottom: 5),
+                                                                                              child: Text(
+                                                                                                "${AllChatmodelData?.object?.messageOutputList?.content?[index].userName}",
+                                                                                                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                                                                                              ),
+                                                                                            ),
+                                                                                            LinkifyText(
+                                                                                              "${AllChatmodelData?.object?.messageOutputList?.content?[index].message}",
+                                                                                              linkStyle: TextStyle(
+                                                                                                color: Colors.blue,
+                                                                                                fontFamily: 'outfit',
+                                                                                              ),
+                                                                                              textStyle: TextStyle(
+                                                                                                color: Colors.black,
+                                                                                                fontFamily: 'outfit',
+                                                                                              ),
+                                                                                              linkTypes: [
+                                                                                                LinkType.url,
+                                                                                                LinkType.userTag,
+                                                                                                LinkType.hashTag,
+                                                                                                // LinkType
+                                                                                                //     .email
+                                                                                              ],
+                                                                                              onTap: (link) async {
+                                                                                                var SelectedTest = link.value.toString();
+                                                                                                var Link = SelectedTest.startsWith('https');
+                                                                                                var Link1 = SelectedTest.startsWith('http');
+                                                                                                var Link2 = SelectedTest.startsWith('www');
+                                                                                                var Link3 = SelectedTest.startsWith('WWW');
+                                                                                                var Link4 = SelectedTest.startsWith('HTTPS');
+                                                                                                var Link5 = SelectedTest.startsWith('HTTP');
+                                                                                                var Link6 = SelectedTest.startsWith('https://pdslink.page.link/');
+                                                                                                print(SelectedTest.toString());
+
+                                                                                                if (Link == true || Link1 == true || Link2 == true || Link3 == true || Link4 == true || Link5 == true || Link6 == true) {
+                                                                                                  if (Link2 == true || Link3 == true) {
+                                                                                                    if (isYouTubeUrl(SelectedTest)) {
+                                                                                                      playLink(SelectedTest, context);
+                                                                                                    } else
+                                                                                                      launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                                                  } else {
+                                                                                                    if (Link6 == true) {
+                                                                                                      print("yes i am in room");
+                                                                                                      Navigator.push(context, MaterialPageRoute(
+                                                                                                        builder: (context) {
+                                                                                                          return NewBottomBar(
+                                                                                                            buttomIndex: 1,
+                                                                                                          );
+                                                                                                        },
+                                                                                                      ));
+                                                                                                    } else {
+                                                                                                      if (isYouTubeUrl(SelectedTest)) {
+                                                                                                        playLink(SelectedTest, context);
+                                                                                                      } else
+                                                                                                        launchUrl(Uri.parse(link.value.toString()));
+                                                                                                      print("link.valuelink.value -- ${link.value}");
+                                                                                                    }
+                                                                                                  }
+                                                                                                } else {
+                                                                                                  if (link.value!.startsWith('#')) {
+                                                                                                    print("${link}");
+
+                                                                                                    Navigator.push(
+                                                                                                        context,
+                                                                                                        MaterialPageRoute(
+                                                                                                          builder: (context) => HashTagViewScreen(title: "${link.value}"),
+                                                                                                        ));
+                                                                                                  } else if (link.value!.startsWith('@')) {
+                                                                                                    var name;
+                                                                                                    var tagName;
+                                                                                                    name = SelectedTest;
+                                                                                                    tagName = name.replaceAll("@", "");
+                                                                                                    await BlocProvider.of<HashTagCubit>(context).UserTagAPI(context, tagName);
+                                                                                                  } else {
+                                                                                                    if (isYouTubeUrl(SelectedTest)) {
+                                                                                                      playLink(SelectedTest, context);
+                                                                                                    } else
+                                                                                                      launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                                                  }
+                                                                                                }
+                                                                                              },
+                                                                                            ),
+                                                                                            if (extractUrls(AllChatmodelData?.object?.messageOutputList?.content?[index].message ?? "").isNotEmpty)
+                                                                                              isYouTubeUrl(extractUrls(AllChatmodelData?.object?.messageOutputList?.content?[index].message ?? "").first)
+                                                                                                  ? FutureBuilder(
+                                                                                                      future: fetchYoutubeThumbnail(extractUrls(AllChatmodelData?.object?.messageOutputList?.content?[index].message ?? "").first),
+                                                                                                      builder: (context, snap) {
+                                                                                                        return Container(
+                                                                                                          height: 100,
+                                                                                                          decoration: BoxDecoration(image: DecorationImage(image: CachedNetworkImageProvider(snap.data.toString())), borderRadius: BorderRadius.circular(10)),
+                                                                                                          clipBehavior: Clip.antiAlias,
+                                                                                                          child: Center(
+                                                                                                              child: IconButton(
+                                                                                                            icon: Icon(
+                                                                                                              Icons.play_circle_fill_rounded,
+                                                                                                              color: Colors.white,
+                                                                                                              size: 60,
+                                                                                                            ),
+                                                                                                            onPressed: () {
+                                                                                                              playLink(extractUrls(AllChatmodelData?.object?.messageOutputList?.content?[index].message ?? "").first, context);
+                                                                                                            },
+                                                                                                          )),
+                                                                                                        );
+                                                                                                      })
+                                                                                                  : Padding(
+                                                                                                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                                                                                      child: AnyLinkPreview(
+                                                                                                        link: extractUrls(AllChatmodelData?.object?.messageOutputList?.content?[index].message ?? "").first,
+                                                                                                        displayDirection: UIDirection.uiDirectionHorizontal,
+                                                                                                        showMultimedia: true,
+                                                                                                        bodyMaxLines: 5,
+                                                                                                        bodyTextOverflow: TextOverflow.ellipsis,
+                                                                                                        titleStyle: TextStyle(
+                                                                                                          color: Colors.black,
+                                                                                                          fontWeight: FontWeight.bold,
+                                                                                                          fontSize: 15,
+                                                                                                        ),
+                                                                                                        bodyStyle: TextStyle(color: Colors.grey, fontSize: 12),
+                                                                                                        errorBody: 'Show my custom error body',
+                                                                                                        errorTitle: 'Show my custom error title',
+                                                                                                        errorWidget: null,
+                                                                                                        errorImage: "https://flutter.dev/",
+                                                                                                        cache: Duration(days: 7),
+                                                                                                        backgroundColor: Colors.grey[300],
+                                                                                                        borderRadius: 12,
+                                                                                                        removeElevation: false,
+                                                                                                        boxShadow: [
+                                                                                                          BoxShadow(blurRadius: 3, color: Colors.grey)
+                                                                                                        ],
+                                                                                                        onTap: () {
+                                                                                                          launchUrl(Uri.parse(extractUrls(AllChatmodelData?.object?.messageOutputList?.content?[index].message ?? "").first));
+                                                                                                        }, // This disables tap event
+                                                                                                      ),
+                                                                                                    ),
+                                                                                            /* Padding(
+                                                                                          padding: const EdgeInsets.only(left: 10, right: 10),
+                                                                                          child: Text(
+                                                                                            "${AllChatmodelData?.object?.messageOutputList?.content?[index].message ?? ""}",
+                                                                                            // maxLines: 3,
+                                                                                            textScaleFactor: 1.0,
+                                                                                            style: TextStyle(fontWeight: FontWeight.w400, color: Colors.black, fontFamily: "outfit", fontSize: 15),
+                                                                                          ),
+                                                                                        ), */
+
+                                                                                            Padding(
+                                                                                              padding: const EdgeInsets.only(bottom: 5, top: 10),
+                                                                                              child: Text(
+                                                                                                customFormat(parsedDateTime),
+                                                                                                textScaleFactor: 1.0,
+                                                                                                style: TextStyle(
+                                                                                                  fontWeight: FontWeight.normal,
+                                                                                                  color: Colors.black,
+                                                                                                  fontFamily: "outfit",
+                                                                                                  fontSize: 8,
+                                                                                                ),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ],
+                                                                                        ),
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+
+                                                                                SizedBox(
+                                                                                  width: 70,
+                                                                                ),
+                                                                              ],
+                                                                            )
+                                                                          : Row(
+                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                              mainAxisAlignment: MainAxisAlignment.start,
+                                                                              children: [
+                                                                                GestureDetector(
+                                                                                  onTap: () {
+                                                                                    Navigator.push(context, MaterialPageRoute(
+                                                                                      builder: (context) {
+                                                                                        return ProfileScreen(User_ID: AllChatmodelData?.object?.messageOutputList?.content?[index].userCode ?? "", isFollowing: "");
+                                                                                      },
+                                                                                    ));
+                                                                                  },
+                                                                                  child: AllChatmodelData?.object?.messageOutputList?.content?[index].userProfilePic != null && AllChatmodelData?.object?.messageOutputList?.content?[index].userProfilePic != ""
+                                                                                      ? Padding(
+                                                                                          padding: EdgeInsets.only(top: 10, left: 3),
+                                                                                          child: CustomImageView(
+                                                                                            url: "${AllChatmodelData?.object?.messageOutputList?.content?[index].userProfilePic}",
+                                                                                            height: 20,
+                                                                                            radius: BorderRadius.circular(20),
+                                                                                            width: 20,
+                                                                                            fit: BoxFit.fill,
+                                                                                          ),
+                                                                                        )
+                                                                                      : Padding(
+                                                                                          padding: EdgeInsets.only(top: 10, left: 3),
+                                                                                          child: CustomImageView(
+                                                                                            imagePath: ImageConstant.tomcruse,
+                                                                                            height: 20,
+                                                                                          ),
+                                                                                        ),
+                                                                                ),
+                                                                                /* Padding(
+                                                                              padding: EdgeInsets.only(right: 16),
+                                                                              child: Align(
+                                                                                alignment: Alignment.centerLeft,
+                                                                                child: Container(
+                                                                                  child: AnimatedNetworkImage(imageUrl: "${AllChatmodelData?.object?.messageOutputList?.content?[index].message}"),
+                                                                                ),
+                                                                              ),
+                                                                            ), */
+                                                                                /*    Row(
+                                                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                          mainAxisAlignment: MainAxisAlignment.end,
+                                                                                          children: [
+                                                                                            Padding(
+                                                                                              padding: EdgeInsets.only(top: 10, left: 3),
+                                                                                              child: Container(
+                                                                                                height: /* AllChatmodelData?.object?.messageOutputList?.content?[index].reactionMessage != null ? 130 : */ 100,
+                                                                                                width: /* getInboxMessagesModel?.object?.content?[index].reactionMessage != null ? 70 : */ 150,
+                                                                                                child: getInboxMessagesModel?.object?.content?[index].reactionMessage != null
+                                                                                                    ? GestureDetector(
+                                                                                                        onTapDown: (detalis) {
+                                                                                                           
+                                                                                                          stroyUid = getInboxMessagesModel?.object?.content?[index].storyUid;
+                                                                                                          BlocProvider.of<DmInboxCubit>(context).get_all_story(context).then((value) {});
+                                                                                                          dataGet = detalis;
+                                                                                                        },
+                                                                                                        child: getInboxMessagesModel?.object?.content?[index].emojiReaction == true
+                                                                                                            ? Stack(
+                                                                                                                children: [
+                                                                                                                  CustomImageView(
+                                                                                                                    url: getInboxMessagesModel?.object?.content?[index].message,
+                                                                                                                    radius: BorderRadius.circular(20), //Ankur1
+                                                                                                                    // height: 20,
+                                                                                                                  ),
+                                                                                                                  Positioned.fill(
+                                                                                                                      child: Align(
+                                                                                                                    alignment: Alignment.bottomRight,
+                                                                                                                    child: Container(
+                                                                                                                      // height: 110,
+                                                                                                                      // width: 50,
+                                                                                                                      margin: EdgeInsets.only(bottom: 2, right: 2),
+                                                                                                                      child: Text(
+                                                                                                                        '${getInboxMessagesModel?.object?.content?[index].reactionMessage}',
+                                                                                                                        style: TextStyle(fontSize: 20),
+                                                                                                                      ),
+                                                                                                                    ),
+                                                                                                                  ))
+                                                                                                                ],
+                                                                                                              )
+                                                                                                            : getInboxMessagesModel?.object?.content?[index].message?.endsWith('.mp4') == true
+                                                                                                                ? VideoThumbnailPage(
+                                                                                                                    videoUrl: getInboxMessagesModel?.object?.content?[index].message ?? '',
+                                                                                                                  )
+                                                                                                                : CustomImageView(
+                                                                                                                    url: getInboxMessagesModel?.object?.content?[index].message,
+                                                                                                                    radius: BorderRadius.circular(20),
+                                                                                                                    // height: 20,
+                                                                                                                  ),
+                                                                                                      )
+                                                                                                    : AnimatedNetworkImage(imageUrl: "${getInboxMessagesModel?.object?.content?[index].message}"),
+                                                                                              ),
+                                                                                            ),
+
+                                                                                            
+                                                                                          ],
+                                                                                        ), */
+                                                                              ],
+                                                                            ),
+
+                                                                      /* if (getInboxMessagesModel?.object?.content?[index].reactionMessage != null && getInboxMessagesModel?.object?.content?[index].emojiReaction != true)
+                                                                                Row(
+                                                                                  children: [
+                                                                                    Align(
+                                                                                        alignment: Alignment.topRight,
+                                                                                        child: Padding(
+                                                                                          padding: EdgeInsets.only(top: getInboxMessagesModel?.object?.content?[index].messageType == 'TEXT' ? 10 : 0, left: 20),
+                                                                                          child: Container(
+                                                                                              margin: EdgeInsets.only(top: 3),
+                                                                                              padding: EdgeInsets.all(10),
+                                                                                              decoration: BoxDecoration(color: ColorConstant.chatcolor, borderRadius: BorderRadius.circular(10)),
+                                                                                              child: Text(
+                                                                                                getInboxMessagesModel?.object?.content?[index].reactionMessage ?? '',
+                                                                                                style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                                                                                              )),
+                                                                                        )),
+                                                                                  ],
+                                                                                ) */
+                                                                    ],
+                                                                  )
+
+                                                                /*  Padding(
                                                                 padding: const EdgeInsets
                                                                         .symmetric(
                                                                     /* horizontal: 35, vertical: 5 */),
@@ -823,8 +1192,336 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                     ],
                                                                   ),
                                                                 ),
-                                                              )
-                                                            : Padding(
+                                                              ) */
+                                                                : Column(
+                                                                    children: [
+                                                                      SizedBox(
+                                                                        height:
+                                                                            10,
+                                                                      ),
+                                                                      AllChatmodelData?.object?.messageOutputList?.content?[index].messageType !=
+                                                                              'IMAGE'
+                                                                          ? Row(
+                                                                              mainAxisAlignment: MainAxisAlignment.end,
+                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                              children: [
+                                                                                // Spacer(),
+                                                                                Flexible(
+                                                                                  child: Padding(
+                                                                                    padding: const EdgeInsets.only(top: 0, left: 3),
+                                                                                    child: Container(
+                                                                                      decoration: BoxDecoration(color: ColorConstant.primaryLight_color, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(8), bottomRight: Radius.circular(8), topLeft: Radius.circular(8))),
+                                                                                      child: Padding(
+                                                                                        padding: const EdgeInsets.only(right: 10, left: 10),
+                                                                                        child: Column(
+                                                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                          // mainAxisAlignment: MainAxisAlignment.start,
+                                                                                          children: [
+                                                                                            LinkifyText(
+                                                                                              "${AllChatmodelData?.object?.messageOutputList?.content?[index].message}",
+                                                                                              linkStyle: TextStyle(
+                                                                                                color: Colors.blue,
+                                                                                                fontFamily: 'outfit',
+                                                                                              ),
+                                                                                              textStyle: TextStyle(
+                                                                                                color: Colors.black,
+                                                                                                fontFamily: 'outfit',
+                                                                                              ),
+                                                                                              linkTypes: [
+                                                                                                LinkType.url,
+                                                                                                LinkType.userTag,
+                                                                                                LinkType.hashTag,
+                                                                                                // LinkType
+                                                                                                //     .email
+                                                                                              ],
+                                                                                              onTap: (link) async {
+                                                                                                var SelectedTest = link.value.toString();
+                                                                                                var Link = SelectedTest.startsWith('https');
+                                                                                                var Link1 = SelectedTest.startsWith('http');
+                                                                                                var Link2 = SelectedTest.startsWith('www');
+                                                                                                var Link3 = SelectedTest.startsWith('WWW');
+                                                                                                var Link4 = SelectedTest.startsWith('HTTPS');
+                                                                                                var Link5 = SelectedTest.startsWith('HTTP');
+                                                                                                var Link6 = SelectedTest.startsWith('https://pdslink.page.link/');
+                                                                                                print(SelectedTest.toString());
+
+                                                                                                if (Link == true || Link1 == true || Link2 == true || Link3 == true || Link4 == true || Link5 == true || Link6 == true) {
+                                                                                                  if (Link2 == true || Link3 == true) {
+                                                                                                    if (isYouTubeUrl(SelectedTest)) {
+                                                                                                      playLink(SelectedTest, context);
+                                                                                                    } else
+                                                                                                      launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                                                  } else {
+                                                                                                    if (Link6 == true) {
+                                                                                                      print("yes i am in room");
+                                                                                                      Navigator.push(context, MaterialPageRoute(
+                                                                                                        builder: (context) {
+                                                                                                          return NewBottomBar(
+                                                                                                            buttomIndex: 1,
+                                                                                                          );
+                                                                                                        },
+                                                                                                      ));
+                                                                                                    } else {
+                                                                                                      if (isYouTubeUrl(SelectedTest)) {
+                                                                                                        playLink(SelectedTest, context);
+                                                                                                      } else
+                                                                                                        launchUrl(Uri.parse(link.value.toString()));
+                                                                                                      print("link.valuelink.value -- ${link.value}");
+                                                                                                    }
+                                                                                                  }
+                                                                                                } else {
+                                                                                                  if (link.value!.startsWith('#')) {
+                                                                                                    print("${link}");
+
+                                                                                                    Navigator.push(
+                                                                                                        context,
+                                                                                                        MaterialPageRoute(
+                                                                                                          builder: (context) => HashTagViewScreen(title: "${link.value}"),
+                                                                                                        ));
+                                                                                                  } else if (link.value!.startsWith('@')) {
+                                                                                                    var name;
+                                                                                                    var tagName;
+                                                                                                    name = SelectedTest;
+                                                                                                    tagName = name.replaceAll("@", "");
+                                                                                                    await BlocProvider.of<HashTagCubit>(context).UserTagAPI(context, tagName);
+                                                                                                  } else {
+                                                                                                    if (isYouTubeUrl(SelectedTest)) {
+                                                                                                      playLink(SelectedTest, context);
+                                                                                                    } else
+                                                                                                      launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                                                  }
+                                                                                                }
+                                                                                              },
+                                                                                            ),
+                                                                                            if (extractUrls(AllChatmodelData?.object?.messageOutputList?.content?[index].message ?? "").isNotEmpty)
+                                                                                              isYouTubeUrl(extractUrls(AllChatmodelData?.object?.messageOutputList?.content?[index].message ?? "").first)
+                                                                                                  ? FutureBuilder(
+                                                                                                      future: fetchYoutubeThumbnail(extractUrls(AllChatmodelData?.object?.messageOutputList?.content?[index].message ?? "").first),
+                                                                                                      builder: (context, snap) {
+                                                                                                        return Container(
+                                                                                                          height: 100,
+                                                                                                          decoration: BoxDecoration(image: DecorationImage(image: CachedNetworkImageProvider(snap.data.toString())), borderRadius: BorderRadius.circular(10)),
+                                                                                                          clipBehavior: Clip.antiAlias,
+                                                                                                          child: Center(
+                                                                                                              child: IconButton(
+                                                                                                            icon: Icon(
+                                                                                                              Icons.play_circle_fill_rounded,
+                                                                                                              color: Colors.white,
+                                                                                                              size: 60,
+                                                                                                            ),
+                                                                                                            onPressed: () {
+                                                                                                              playLink(extractUrls(AllChatmodelData?.object?.messageOutputList?.content?[index].message ?? "").first, context);
+                                                                                                            },
+                                                                                                          )),
+                                                                                                        );
+                                                                                                      })
+                                                                                                  : Padding(
+                                                                                                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                                                                                      child: AnyLinkPreview(
+                                                                                                        link: extractUrls(AllChatmodelData?.object?.messageOutputList?.content?[index].message ?? "").first,
+                                                                                                        displayDirection: UIDirection.uiDirectionHorizontal,
+                                                                                                        showMultimedia: true,
+                                                                                                        bodyMaxLines: 5,
+                                                                                                        bodyTextOverflow: TextOverflow.ellipsis,
+                                                                                                        titleStyle: TextStyle(
+                                                                                                          color: Colors.black,
+                                                                                                          fontWeight: FontWeight.bold,
+                                                                                                          fontSize: 15,
+                                                                                                        ),
+                                                                                                        bodyStyle: TextStyle(color: Colors.grey, fontSize: 12),
+                                                                                                        errorBody: 'Show my custom error body',
+                                                                                                        errorTitle: 'Show my custom error title',
+                                                                                                        errorWidget: null,
+                                                                                                        errorImage: "https://flutter.dev/",
+                                                                                                        cache: Duration(days: 7),
+                                                                                                        backgroundColor: Colors.grey[300],
+                                                                                                        borderRadius: 12,
+                                                                                                        removeElevation: false,
+                                                                                                        boxShadow: [
+                                                                                                          BoxShadow(blurRadius: 3, color: Colors.grey)
+                                                                                                        ],
+                                                                                                        onTap: () {
+                                                                                                          launchUrl(Uri.parse(extractUrls(AllChatmodelData?.object?.messageOutputList?.content?[index].message ?? "").first));
+                                                                                                        }, // This disables tap event
+                                                                                                      ),
+                                                                                                    ),
+                                                                                            /* Padding(
+                                                                                          padding: const EdgeInsets.only(left: 10, right: 10),
+                                                                                          child: Text(
+                                                                                            "${AllChatmodelData?.object?.messageOutputList?.content?[index].message ?? ""}",
+                                                                                            // maxLines: 3,
+                                                                                            textScaleFactor: 1.0,
+                                                                                            style: TextStyle(fontWeight: FontWeight.w400, color: Colors.black, fontFamily: "outfit", fontSize: 15),
+                                                                                          ),
+                                                                                        ), */
+
+                                                                                            Padding(
+                                                                                              padding: const EdgeInsets.only(bottom: 5, top: 10),
+                                                                                              child: Text(
+                                                                                                customFormat(parsedDateTime),
+                                                                                                textScaleFactor: 1.0,
+                                                                                                style: TextStyle(
+                                                                                                  fontWeight: FontWeight.normal,
+                                                                                                  color: Colors.black,
+                                                                                                  fontFamily: "outfit",
+                                                                                                  fontSize: 8,
+                                                                                                ),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ],
+                                                                                        ),
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                                Padding(
+                                                                                  padding: const EdgeInsets.only(left: 3, right: 10),
+                                                                                  child: GestureDetector(
+                                                                                    onTap: () {
+                                                                                      Navigator.push(context, MaterialPageRoute(
+                                                                                        builder: (context) {
+                                                                                          return ProfileScreen(User_ID: AllChatmodelData?.object?.messageOutputList?.content?[index].userCode ?? "", isFollowing: "");
+                                                                                        },
+                                                                                      ));
+                                                                                    },
+                                                                                    child: AllChatmodelData?.object?.messageOutputList?.content?[index].userProfilePic != null && AllChatmodelData?.object?.messageOutputList?.content?[index].userProfilePic != ""
+                                                                                        ? CustomImageView(
+                                                                                            url: "${AllChatmodelData?.object?.messageOutputList?.content?[index].userProfilePic}",
+                                                                                            height: 20,
+                                                                                            radius: BorderRadius.circular(20),
+                                                                                            width: 20,
+                                                                                            fit: BoxFit.fill,
+                                                                                          )
+                                                                                        : CustomImageView(
+                                                                                            imagePath: ImageConstant.tomcruse,
+                                                                                            height: 20,
+                                                                                          ),
+                                                                                  ),
+                                                                                ),
+                                                                              ],
+                                                                            )
+                                                                          : Row(
+                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                              mainAxisAlignment: MainAxisAlignment.end,
+                                                                              children: [
+                                                                                /*  Flexible(
+                                                                                  child: Padding(
+                                                                                    padding: EdgeInsets.only(right: 16),
+                                                                                    child: Container(
+                                                                                      child: AnimatedNetworkImage(imageUrl: "${AllChatmodelData?.object?.messageOutputList?.content?[index].message}"),
+                                                                                    ),
+                                                                                  ),
+                                                                                ), */
+                                                                                GestureDetector(
+                                                                                  onTap: () {
+                                                                                    Navigator.push(context, MaterialPageRoute(
+                                                                                      builder: (context) {
+                                                                                        return ProfileScreen(User_ID: AllChatmodelData?.object?.messageOutputList?.content?[index].userCode ?? "", isFollowing: "");
+                                                                                      },
+                                                                                    ));
+                                                                                  },
+                                                                                  child: AllChatmodelData?.object?.messageOutputList?.content?[index].userProfilePic != null && AllChatmodelData?.object?.messageOutputList?.content?[index].userProfilePic != ""
+                                                                                      ? Padding(
+                                                                                          padding: EdgeInsets.only(top: 10, right: 10),
+                                                                                          child: CustomImageView(
+                                                                                            url: "${AllChatmodelData?.object?.messageOutputList?.content?[index].userProfilePic}",
+                                                                                            height: 20,
+                                                                                            radius: BorderRadius.circular(20),
+                                                                                            width: 20,
+                                                                                            fit: BoxFit.fill,
+                                                                                          ),
+                                                                                        )
+                                                                                      : Padding(
+                                                                                          padding: EdgeInsets.only(top: 10, right: 10),
+                                                                                          child: CustomImageView(
+                                                                                            imagePath: ImageConstant.tomcruse,
+                                                                                            height: 20,
+                                                                                          ),
+                                                                                        ),
+                                                                                ),
+                                                                                /*   */
+                                                                                /*    Row(
+                                                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                          mainAxisAlignment: MainAxisAlignment.end,
+                                                                                          children: [
+                                                                                            Padding(
+                                                                                              padding: EdgeInsets.only(top: 10, left: 3),
+                                                                                              child: Container(
+                                                                                                height: /* AllChatmodelData?.object?.messageOutputList?.content?[index].reactionMessage != null ? 130 : */ 100,
+                                                                                                width: /* getInboxMessagesModel?.object?.content?[index].reactionMessage != null ? 70 : */ 150,
+                                                                                                child: getInboxMessagesModel?.object?.content?[index].reactionMessage != null
+                                                                                                    ? GestureDetector(
+                                                                                                        onTapDown: (detalis) {
+                                                                                                           
+                                                                                                          stroyUid = getInboxMessagesModel?.object?.content?[index].storyUid;
+                                                                                                          BlocProvider.of<DmInboxCubit>(context).get_all_story(context).then((value) {});
+                                                                                                          dataGet = detalis;
+                                                                                                        },
+                                                                                                        child: getInboxMessagesModel?.object?.content?[index].emojiReaction == true
+                                                                                                            ? Stack(
+                                                                                                                children: [
+                                                                                                                  CustomImageView(
+                                                                                                                    url: getInboxMessagesModel?.object?.content?[index].message,
+                                                                                                                    radius: BorderRadius.circular(20), //Ankur1
+                                                                                                                    // height: 20,
+                                                                                                                  ),
+                                                                                                                  Positioned.fill(
+                                                                                                                      child: Align(
+                                                                                                                    alignment: Alignment.bottomRight,
+                                                                                                                    child: Container(
+                                                                                                                      // height: 110,
+                                                                                                                      // width: 50,
+                                                                                                                      margin: EdgeInsets.only(bottom: 2, right: 2),
+                                                                                                                      child: Text(
+                                                                                                                        '${getInboxMessagesModel?.object?.content?[index].reactionMessage}',
+                                                                                                                        style: TextStyle(fontSize: 20),
+                                                                                                                      ),
+                                                                                                                    ),
+                                                                                                                  ))
+                                                                                                                ],
+                                                                                                              )
+                                                                                                            : getInboxMessagesModel?.object?.content?[index].message?.endsWith('.mp4') == true
+                                                                                                                ? VideoThumbnailPage(
+                                                                                                                    videoUrl: getInboxMessagesModel?.object?.content?[index].message ?? '',
+                                                                                                                  )
+                                                                                                                : CustomImageView(
+                                                                                                                    url: getInboxMessagesModel?.object?.content?[index].message,
+                                                                                                                    radius: BorderRadius.circular(20),
+                                                                                                                    // height: 20,
+                                                                                                                  ),
+                                                                                                      )
+                                                                                                    : AnimatedNetworkImage(imageUrl: "${getInboxMessagesModel?.object?.content?[index].message}"),
+                                                                                              ),
+                                                                                            ),
+
+                                                                                            
+                                                                                          ],
+                                                                                        ), */
+                                                                              ],
+                                                                            ),
+
+                                                                      /* if (getInboxMessagesModel?.object?.content?[index].reactionMessage != null && getInboxMessagesModel?.object?.content?[index].emojiReaction != true)
+                                                                                Row(
+                                                                                  children: [
+                                                                                    Align(
+                                                                                        alignment: Alignment.topRight,
+                                                                                        child: Padding(
+                                                                                          padding: EdgeInsets.only(top: getInboxMessagesModel?.object?.content?[index].messageType == 'TEXT' ? 10 : 0, left: 20),
+                                                                                          child: Container(
+                                                                                              margin: EdgeInsets.only(top: 3),
+                                                                                              padding: EdgeInsets.all(10),
+                                                                                              decoration: BoxDecoration(color: ColorConstant.chatcolor, borderRadius: BorderRadius.circular(10)),
+                                                                                              child: Text(
+                                                                                                getInboxMessagesModel?.object?.content?[index].reactionMessage ?? '',
+                                                                                                style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                                                                                              )),
+                                                                                        )),
+                                                                                  ],
+                                                                                ) */
+                                                                    ],
+                                                                  )
+
+                                                            /* Padding(
                                                                 padding:
                                                                     const EdgeInsets
                                                                         .symmetric(),
@@ -919,7 +1616,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                                   callback: (StompFrame frame) {
                                                                                     Map<String, dynamic> jsonString = json.decode(frame.body ?? "");
 
-                                                                                    Content content1 = Content.fromJson(jsonString['object']);
+                                                                                    Contentt content1 = Contentt.fromJson(jsonString['object']);
                                                                                     print("AAAAAAAAA ->>>>>> ${content1}");
                                                                                     print("delete 11");
                                                                                     var msgUUID = content1.uid;
@@ -975,7 +1672,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                                             print("check This DataGet-${frame.body}");
                                                                                             Map<String, dynamic> jsonString = json.decode(frame.body ?? "");
 
-                                                                                            Content content1 = Content.fromJson(jsonString['object']);
+                                                                                            Contentt content1 = Contentt.fromJson(jsonString['object']);
                                                                                             print("delete 22");
                                                                                             print("BBBBBBBBB ->>>>>> ${content1}");
                                                                                             var msgUUID = content1.uid;
@@ -1033,7 +1730,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                                                 print("fram check-${frame.body}");
                                                                                                 Map<String, dynamic> jsonString = json.decode(frame.body ?? "");
 
-                                                                                                Content content1 = Content.fromJson(jsonString['object']);
+                                                                                                Contentt content1 = Contentt.fromJson(jsonString['object']);
                                                                                                 print("comtatne check--${content1.isDeleted}");
 
                                                                                                 var msgUUID = content1.uid;
@@ -1116,101 +1813,60 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                                             //     .email
                                                                                           ],
                                                                                           onTap: (link) async {
-                                                                                            var SelectedTest =
-                                                                                            link.value.toString();
-                                                                                            var Link =
-                                                                                            SelectedTest.startsWith(
-                                                                                                'https');
-                                                                                            var Link1 =
-                                                                                            SelectedTest.startsWith(
-                                                                                                'http');
-                                                                                            var Link2 =
-                                                                                            SelectedTest.startsWith(
-                                                                                                'www');
-                                                                                            var Link3 =
-                                                                                            SelectedTest.startsWith(
-                                                                                                'WWW');
-                                                                                            var Link4 =
-                                                                                            SelectedTest.startsWith(
-                                                                                                'HTTPS');
-                                                                                            var Link5 =
-                                                                                            SelectedTest.startsWith(
-                                                                                                'HTTP');
-                                                                                            var Link6 =
-                                                                                            SelectedTest.startsWith(
-                                                                                                'https://pdslink.page.link/');
-                                                                                            print(SelectedTest
-                                                                                                .toString());
+                                                                                            var SelectedTest = link.value.toString();
+                                                                                            var Link = SelectedTest.startsWith('https');
+                                                                                            var Link1 = SelectedTest.startsWith('http');
+                                                                                            var Link2 = SelectedTest.startsWith('www');
+                                                                                            var Link3 = SelectedTest.startsWith('WWW');
+                                                                                            var Link4 = SelectedTest.startsWith('HTTPS');
+                                                                                            var Link5 = SelectedTest.startsWith('HTTP');
+                                                                                            var Link6 = SelectedTest.startsWith('https://pdslink.page.link/');
+                                                                                            print(SelectedTest.toString());
 
-                                                                                            if (Link == true ||
-                                                                                                Link1 == true ||
-                                                                                                Link2 == true ||
-                                                                                                Link3 == true ||
-                                                                                                Link4 == true ||
-                                                                                                Link5 == true ||
-                                                                                                Link6 == true) {
-                                                                                              if (Link2 == true ||
-                                                                                                  Link3 == true) {
+                                                                                            if (Link == true || Link1 == true || Link2 == true || Link3 == true || Link4 == true || Link5 == true || Link6 == true) {
+                                                                                              if (Link2 == true || Link3 == true) {
                                                                                                 if (isYouTubeUrl(SelectedTest)) {
                                                                                                   playLink(SelectedTest, context);
-                                                                                                } else launchUrl(Uri.parse(
-                                                                                                    "https://${link.value.toString()}"));
+                                                                                                } else
+                                                                                                  launchUrl(Uri.parse("https://${link.value.toString()}"));
                                                                                               } else {
                                                                                                 if (Link6 == true) {
-                                                                                                  print(
-                                                                                                      "yes i am in room");
-                                                                                                  Navigator.push(
-                                                                                                      context,
-                                                                                                      MaterialPageRoute(
-                                                                                                        builder: (context) {
-                                                                                                          return NewBottomBar(
-                                                                                                            buttomIndex: 1,
-                                                                                                          );
-                                                                                                        },
-                                                                                                      ));
+                                                                                                  print("yes i am in room");
+                                                                                                  Navigator.push(context, MaterialPageRoute(
+                                                                                                    builder: (context) {
+                                                                                                      return NewBottomBar(
+                                                                                                        buttomIndex: 1,
+                                                                                                      );
+                                                                                                    },
+                                                                                                  ));
                                                                                                 } else {
                                                                                                   if (isYouTubeUrl(SelectedTest)) {
                                                                                                     playLink(SelectedTest, context);
-                                                                                                  } else launchUrl(Uri.parse(
-                                                                                                      link.value
-                                                                                                          .toString()));
-                                                                                                  print(
-                                                                                                      "link.valuelink.value -- ${link.value}");
+                                                                                                  } else
+                                                                                                    launchUrl(Uri.parse(link.value.toString()));
+                                                                                                  print("link.valuelink.value -- ${link.value}");
                                                                                                 }
                                                                                               }
                                                                                             } else {
-                                                                                              if (link.value!
-                                                                                                  .startsWith('#')) {
+                                                                                              if (link.value!.startsWith('#')) {
                                                                                                 print("${link}");
 
-                                                                                                  Navigator.push(
-                                                                                                      context,
-                                                                                                      MaterialPageRoute(
-                                                                                                        builder: (context) =>
-                                                                                                            HashTagViewScreen(
-                                                                                                                title:
-                                                                                                                "${link.value}"),
-                                                                                                      ));
-
-                                                                                              } else if (link.value!
-                                                                                                  .startsWith('@')) {
+                                                                                                Navigator.push(
+                                                                                                    context,
+                                                                                                    MaterialPageRoute(
+                                                                                                      builder: (context) => HashTagViewScreen(title: "${link.value}"),
+                                                                                                    ));
+                                                                                              } else if (link.value!.startsWith('@')) {
                                                                                                 var name;
                                                                                                 var tagName;
                                                                                                 name = SelectedTest;
-                                                                                                tagName =
-                                                                                                    name.replaceAll(
-                                                                                                        "@", "");
-                                                                                                await BlocProvider.of<
-                                                                                                    HashTagCubit>(
-                                                                                                    context)
-                                                                                                    .UserTagAPI(context,
-                                                                                                    tagName);
-
+                                                                                                tagName = name.replaceAll("@", "");
+                                                                                                await BlocProvider.of<HashTagCubit>(context).UserTagAPI(context, tagName);
                                                                                               } else {
                                                                                                 if (isYouTubeUrl(SelectedTest)) {
                                                                                                   playLink(SelectedTest, context);
-                                                                                                } else launchUrl(Uri.parse(
-                                                                                                    "https://${link.value.toString()}"));
+                                                                                                } else
+                                                                                                  launchUrl(Uri.parse("https://${link.value.toString()}"));
                                                                                               }
                                                                                             }
                                                                                           },
@@ -1218,14 +1874,14 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                                         if (extractUrls(AllChatmodelData?.object?.messageOutputList?.content?[index].message ?? "").isNotEmpty)
                                                                                           isYouTubeUrl(extractUrls(AllChatmodelData?.object?.messageOutputList?.content?[index].message ?? "").first)
                                                                                               ? FutureBuilder(
-                                                                                              future: fetchYoutubeThumbnail(extractUrls(AllChatmodelData?.object?.messageOutputList?.content?[index].message ?? "").first),
-                                                                                              builder: (context, snap) {
-                                                                                                return Container(
-                                                                                                  height: 200,
-                                                                                                  decoration: BoxDecoration(image: DecorationImage(image: CachedNetworkImageProvider(snap.data.toString())), borderRadius: BorderRadius.circular(10)),
-                                                                                                  clipBehavior: Clip.antiAlias,
-                                                                                                  child: Center(
-                                                                                                      child: IconButton(
+                                                                                                  future: fetchYoutubeThumbnail(extractUrls(AllChatmodelData?.object?.messageOutputList?.content?[index].message ?? "").first),
+                                                                                                  builder: (context, snap) {
+                                                                                                    return Container(
+                                                                                                      height: 200,
+                                                                                                      decoration: BoxDecoration(image: DecorationImage(image: CachedNetworkImageProvider(snap.data.toString())), borderRadius: BorderRadius.circular(10)),
+                                                                                                      clipBehavior: Clip.antiAlias,
+                                                                                                      child: Center(
+                                                                                                          child: IconButton(
                                                                                                         icon: Icon(
                                                                                                           Icons.play_circle_fill_rounded,
                                                                                                           color: Colors.white,
@@ -1235,38 +1891,38 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                                                           playLink(extractUrls(AllChatmodelData?.object?.messageOutputList?.content?[index].message ?? "").first, context);
                                                                                                         },
                                                                                                       )),
-                                                                                                );
-                                                                                              })
+                                                                                                    );
+                                                                                                  })
                                                                                               : Padding(
-                                                                                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                                                                            child: AnyLinkPreview(
-                                                                                              link: extractUrls(AllChatmodelData?.object?.messageOutputList?.content?[index].message ?? "").first,
-                                                                                              displayDirection: UIDirection.uiDirectionHorizontal,
-                                                                                              showMultimedia: true,
-                                                                                              bodyMaxLines: 5,
-                                                                                              bodyTextOverflow: TextOverflow.ellipsis,
-                                                                                              titleStyle: TextStyle(
-                                                                                                color: Colors.black,
-                                                                                                fontWeight: FontWeight.bold,
-                                                                                                fontSize: 15,
-                                                                                              ),
-                                                                                              bodyStyle: TextStyle(color: Colors.grey, fontSize: 12),
-                                                                                              errorBody: 'Show my custom error body',
-                                                                                              errorTitle: 'Show my custom error title',
-                                                                                              errorWidget: null,
-                                                                                              errorImage: "https://flutter.dev/",
-                                                                                              cache: Duration(days: 7),
-                                                                                              backgroundColor: Colors.grey[300],
-                                                                                              borderRadius: 12,
-                                                                                              removeElevation: false,
-                                                                                              boxShadow: [
-                                                                                                BoxShadow(blurRadius: 3, color: Colors.grey)
-                                                                                              ],
-                                                                                              onTap: () {
-                                                                                                launchUrl(Uri.parse(extractUrls(AllChatmodelData?.object?.messageOutputList?.content?[index].message ?? "").first));
-                                                                                              }, // This disables tap event
-                                                                                            ),
-                                                                                          ),
+                                                                                                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                                                                                  child: AnyLinkPreview(
+                                                                                                    link: extractUrls(AllChatmodelData?.object?.messageOutputList?.content?[index].message ?? "").first,
+                                                                                                    displayDirection: UIDirection.uiDirectionHorizontal,
+                                                                                                    showMultimedia: true,
+                                                                                                    bodyMaxLines: 5,
+                                                                                                    bodyTextOverflow: TextOverflow.ellipsis,
+                                                                                                    titleStyle: TextStyle(
+                                                                                                      color: Colors.black,
+                                                                                                      fontWeight: FontWeight.bold,
+                                                                                                      fontSize: 15,
+                                                                                                    ),
+                                                                                                    bodyStyle: TextStyle(color: Colors.grey, fontSize: 12),
+                                                                                                    errorBody: 'Show my custom error body',
+                                                                                                    errorTitle: 'Show my custom error title',
+                                                                                                    errorWidget: null,
+                                                                                                    errorImage: "https://flutter.dev/",
+                                                                                                    cache: Duration(days: 7),
+                                                                                                    backgroundColor: Colors.grey[300],
+                                                                                                    borderRadius: 12,
+                                                                                                    removeElevation: false,
+                                                                                                    boxShadow: [
+                                                                                                      BoxShadow(blurRadius: 3, color: Colors.grey)
+                                                                                                    ],
+                                                                                                    onTap: () {
+                                                                                                      launchUrl(Uri.parse(extractUrls(AllChatmodelData?.object?.messageOutputList?.content?[index].message ?? "").first));
+                                                                                                    }, // This disables tap event
+                                                                                                  ),
+                                                                                                ),
                                                                                       ],
                                                                                     ),
                                                                                   ),
@@ -1294,7 +1950,10 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                     ),
                                                                   ],
                                                                 ),
-                                                              );
+                                                              ) */
+                                                          ],
+                                                        );
+
                                                         // }
                                                       })),
                                             ],
@@ -1354,12 +2013,14 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                 ),
                               )
                             : SizedBox(),
-                        if(title.isNotEmpty)
+                        if (title.isNotEmpty)
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 8.0),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0, vertical: 8.0),
                             child: AnyLinkPreview(
                               link: title,
-                              displayDirection: UIDirection.uiDirectionHorizontal,
+                              displayDirection:
+                                  UIDirection.uiDirectionHorizontal,
                               showMultimedia: true,
                               bodyMaxLines: 5,
                               bodyTextOverflow: TextOverflow.ellipsis,
@@ -1368,7 +2029,8 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                 fontWeight: FontWeight.bold,
                                 fontSize: 15,
                               ),
-                              bodyStyle: TextStyle(color: Colors.grey, fontSize: 12),
+                              bodyStyle:
+                                  TextStyle(color: Colors.grey, fontSize: 12),
                               errorBody: 'Show my custom error body',
                               errorTitle: 'Show my custom error title',
                               errorWidget: Container(
@@ -1380,8 +2042,11 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                               backgroundColor: Colors.grey[300],
                               borderRadius: 12,
                               removeElevation: false,
-                              boxShadow: [BoxShadow(blurRadius: 3, color: Colors.grey)],
-                              onTap: (){                                    launchUrl(Uri.parse(title));
+                              boxShadow: [
+                                BoxShadow(blurRadius: 3, color: Colors.grey)
+                              ],
+                              onTap: () {
+                                launchUrl(Uri.parse(title));
                               }, // This disables tap event
                             ),
                           ),
@@ -1394,17 +2059,20 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                   maxLines: null,
                                   controller: Add_Comment,
                                   cursorColor: Colors.grey,
-                                  onChanged: (value){
-                                    if (AnyLinkPreview.isValidLink(extractUrls(value).first)) {
+                                  onChanged: (value) {
+                                    if (AnyLinkPreview.isValidLink(
+                                        extractUrls(value).first)) {
                                       if (_timer != null) {
                                         _timer?.cancel();
-                                        _timer = Timer(Duration(seconds: 2), () {
+                                        _timer =
+                                            Timer(Duration(seconds: 2), () {
                                           setState(() {
                                             title = extractUrls(value).first;
                                           });
                                         });
                                       } else {
-                                        _timer = Timer(Duration(seconds: 2), () {
+                                        _timer =
+                                            Timer(Duration(seconds: 2), () {
                                           setState(() {
                                             title = extractUrls(value).first;
                                           });
@@ -1946,29 +2614,30 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
       caseSensitive: false,
     );
 
-    List<String> urls = regExp.allMatches(text).map((match) => match.group(0)!).toList();
+    List<String> urls =
+        regExp.allMatches(text).map((match) => match.group(0)!).toList();
     List<String> finalUrls = [];
     RegExp urlRegex = RegExp(r"(http(s)?://)", caseSensitive: false);
     urls.forEach((element) {
-      if(urlRegex.allMatches(element).toList().length > 1){
+      if (urlRegex.allMatches(element).toList().length > 1) {
         String xyz = element.replaceAll("http", ",http");
         List<String> splitted = xyz.split(RegExp(r",|;"));
         splitted.forEach((element1) {
-          if(element1.isNotEmpty)
-            finalUrls.add(element1);
+          if (element1.isNotEmpty) finalUrls.add(element1);
         });
-      }else{
+      } else {
         finalUrls.add(element);
       }
     });
     return finalUrls;
-
   }
 
   bool isYouTubeUrl(String url) {
     // Regular expression pattern to match YouTube URLs
-    RegExp youtubeVideoRegex = RegExp(r"^https?://(?:www\.)?youtube\.com/(?:watch\?v=)?([^#&?]+)");
-    RegExp youtubeShortsRegex = RegExp(r"^https?://(?:www\.)?youtube\.com/shorts/([^#&?]+)");
+    RegExp youtubeVideoRegex =
+        RegExp(r"^https?://(?:www\.)?youtube\.com/(?:watch\?v=)?([^#&?]+)");
+    RegExp youtubeShortsRegex =
+        RegExp(r"^https?://(?:www\.)?youtube\.com/shorts/([^#&?]+)");
 
     if (youtubeVideoRegex.hasMatch(url) || youtubeShortsRegex.hasMatch(url)) {
       return true;
@@ -2001,16 +2670,21 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      FutureBuilder(future: getYoutubePlayer(videoUrl, () {
-                        Navigator.pop(ctx);
-                        launchUrl(Uri.parse(videoUrl));
-                      }), builder: (context,snap){
-                        if(snap.data != null)
-                          return snap.data as Widget;
-                        else return Center(
-                          child: CircularProgressIndicator(color: Colors.white,),
-                        );
-                      })
+                      FutureBuilder(
+                          future: getYoutubePlayer(videoUrl, () {
+                            Navigator.pop(ctx);
+                            launchUrl(Uri.parse(videoUrl));
+                          }),
+                          builder: (context, snap) {
+                            if (snap.data != null)
+                              return snap.data as Widget;
+                            else
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                ),
+                              );
+                          })
                     ],
                   ),
                   Align(
@@ -2061,10 +2735,10 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
     return playlistId;
   }
 
-
   Future<List<String>> getPlaylistVideos(String playlistId) async {
     // final url = "https://www.youtube.com/playlist?list=RDF0SflZWxv8k";
-    final url = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=$playlistId&key=AIzaSyAT_gzTjHn9XuvQsmGdY63br7lKhD2KRdo";
+    final url =
+        "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=$playlistId&key=AIzaSyAT_gzTjHn9XuvQsmGdY63br7lKhD2KRdo";
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       // Parse the HTML content to extract video IDs (implementation depends on website structure)
@@ -2075,7 +2749,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
       }
       return videoIds; // List of video IDs
     } else {
-      print ("Failed to fetch playlist videos");
+      print("Failed to fetch playlist videos");
       return [];
     }
   }
@@ -2110,17 +2784,17 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
     return liveId;
   }
 
-
-  Future<Widget> getYoutubePlayer(String videoUrl, Function() fullScreen) async{
+  Future<Widget> getYoutubePlayer(
+      String videoUrl, Function() fullScreen) async {
     late YoutubePlayerController _controller;
     String videoId = "";
-    if(videoUrl.toLowerCase().contains("playlist")){
+    if (videoUrl.toLowerCase().contains("playlist")) {
       String playlistId = extractPlaylistId(videoUrl);
       var videoIds = await getPlaylistVideos(playlistId);
       videoId = videoIds.first;
-    }else if(videoUrl.toLowerCase().contains("live")){
+    } else if (videoUrl.toLowerCase().contains("live")) {
       videoId = extractLiveId(videoUrl);
-    }else{
+    } else {
       videoId = YoutubePlayer.convertUrlToId(videoUrl)!;
     }
     print("video id ========================> $videoId");
@@ -2231,6 +2905,30 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
         }
       },
     );
+  }
+
+  bool _isDifferentDate(String dateString1, String dateString2) {
+    final date1 = DateTime.parse(dateString1).toLocal();
+    final date2 = DateTime.parse(dateString2).toLocal();
+    return !_isSameDate(date1, date2);
+  }
+
+  bool _isSameDate(DateTime date1, DateTime date2) {
+    return date1.year == date2.year &&
+        date1.month == date2.month &&
+        date1.day == date2.day;
+  }
+
+  String _formatDate(String dateString) {
+    final now = DateTime.now();
+    final date = DateTime.parse(dateString).toLocal();
+    if (_isSameDate(date, now)) {
+      return 'Today';
+    } else if (_isSameDate(date.add(Duration(days: 1)), now)) {
+      return 'Yesterday';
+    } else {
+      return '${date.day}/${date.month}/${date.year}';
+    }
   }
 
   Future<void> camerapicker() async {
