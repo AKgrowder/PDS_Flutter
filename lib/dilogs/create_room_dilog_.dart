@@ -50,7 +50,6 @@ class _CreateRoomScreenState extends State<CreateRoomScreen>
 
     controller.forward();
   }
- 
 
   @override
   Widget build(BuildContext context) {
@@ -225,7 +224,6 @@ class _CreateRoomScreenState extends State<CreateRoomScreen>
                                     const EdgeInsets.only(left: 10, right: 10),
                                 child: Container(
                                   height: 80,
-                                  width: _width / 1.3,
                                   decoration: BoxDecoration(
                                       color: Colors.transparent,
                                       border: Border.all(
@@ -409,5 +407,3 @@ class _CreateRoomScreenState extends State<CreateRoomScreen>
         .GetAllPrivateRoomAPI(context);
   }
 }
-
- 
