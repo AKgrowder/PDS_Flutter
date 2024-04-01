@@ -10,6 +10,7 @@ import 'package:pds/dilogs/create_room_dilog_.dart';
 import 'package:pds/dilogs/invite_dilog.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
+import 'package:pds/presentation/DMAll_Screen/dm_new.dart';
 import 'package:pds/presentation/experts/experts_screen.dart';
 import 'package:pds/presentation/room_members/room_members_screen.dart';
 import 'package:pds/presentation/rooms/room_details_screen.dart';
@@ -844,7 +845,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                   .isLoginUserAdmin ==
                                                               true
                                                           ? SizedBox()
-                                                          : User_Mood ==
+                                                          : /* User_Mood ==
                                                                   "EXPERT"
                                                               ? GestureDetector(
                                                                   onTap: () {
@@ -869,29 +870,30 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                   child: Icon(Icons
                                                                       .remove_red_eye_outlined),
                                                                 )
-                                                              : GestureDetector(
-                                                                  onTap: () {
-                                                                    print(
-                                                                        'EXPERT');
-                                                                    print(
-                                                                        "check UserId Print-->${PriveateRoomData?.object?[index].uid.toString()}");
-                                                                    Navigator.push(
-                                                                        context,
-                                                                        MaterialPageRoute(
-                                                                      builder:
-                                                                          (context) {
-                                                                        return RoomDetailScreen(
-                                                                          uuid: PriveateRoomData
-                                                                              ?.object?[index]
-                                                                              .uid
-                                                                              .toString(),
-                                                                        );
-                                                                      },
-                                                                    ));
+                                                              : */
+                                                          GestureDetector(
+                                                              onTap: () {
+                                                                print('EXPERT');
+                                                                print(
+                                                                    "check UserId Print-->${PriveateRoomData?.object?[index].uid.toString()}");
+                                                                Navigator.push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) {
+                                                                    return RoomDetailScreen(
+                                                                      uuid: PriveateRoomData
+                                                                          ?.object?[
+                                                                              index]
+                                                                          .uid
+                                                                          .toString(),
+                                                                    );
                                                                   },
-                                                                  child: Icon(Icons
-                                                                      .remove_red_eye_outlined),
-                                                                ),
+                                                                ));
+                                                              },
+                                                              child: Icon(Icons
+                                                                  .remove_red_eye_outlined),
+                                                            ),
                                                   SizedBox(
                                                     width: 10,
                                                   ),
@@ -1366,26 +1368,26 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                 )),
                                                               ),
                                                             )
-                                                          : User_Mood ==
+                                                          : /* User_Mood ==
                                                                   "EXPERT"
                                                               ? SizedBox()
-                                                              : checkuserdata ==
-                                                                      "PARTIALLY_REGISTERED"
-                                                                  ? SizedBox()
-                                                                  : GestureDetector(
-                                                                      onTap:
-                                                                          () {
-                                                                        print("Room invited Link --> " +
-                                                                            "${PriveateRoomData?.object?[index].roomLink}");
-                                                                        setState(
-                                                                            () {
-                                                                          inviteUserDailog =
-                                                                              true;
-                                                                          selectedIndex =
-                                                                              index;
-                                                                        });
+                                                              :  */
+                                                          checkuserdata ==
+                                                                  "PARTIALLY_REGISTERED"
+                                                              ? SizedBox()
+                                                              : GestureDetector(
+                                                                  onTap: () {
+                                                                    print("Room invited Link --> " +
+                                                                        "${PriveateRoomData?.object?[index].roomLink}");
+                                                                    setState(
+                                                                        () {
+                                                                      inviteUserDailog =
+                                                                          true;
+                                                                      selectedIndex =
+                                                                          index;
+                                                                    });
 
-                                                                        /*  showDialog(
+                                                                    /*  showDialog(
                                                                           context:
                                                                               context,
                                                                           builder: (context) =>
@@ -1402,34 +1404,35 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                             ),
                                                                           ),
                                                                         ); */
-                                                                      },
-                                                                      child: /* PriveateRoomData
+                                                                  },
+                                                                  child: /* PriveateRoomData
                                                                               ?.object?[
                                                                                   index]
                                                                               .createdBy ==
                                                                           userId */
-                                                                          PriveateRoomData?.object?[index].isLoginUserAdmin == true
-                                                                              ? Container(
-                                                                                  width: 140,
-                                                                                  height: 22.51,
-                                                                                  decoration: ShapeDecoration(
-                                                                                    color: Color(0xFFFFD9DA),
-                                                                                    shape: RoundedRectangleBorder(
-                                                                                      side: BorderSide(
-                                                                                        width: 1,
-                                                                                        color: ColorConstant.primary_color,
-                                                                                      ),
-                                                                                      borderRadius: BorderRadius.circular(50),
-                                                                                    ),
+                                                                      PriveateRoomData?.object?[index].isLoginUserAdmin ==
+                                                                              true
+                                                                          ? Container(
+                                                                              width: 140,
+                                                                              height: 22.51,
+                                                                              decoration: ShapeDecoration(
+                                                                                color: Color(0xFFFFD9DA),
+                                                                                shape: RoundedRectangleBorder(
+                                                                                  side: BorderSide(
+                                                                                    width: 1,
+                                                                                    color: ColorConstant.primary_color,
                                                                                   ),
-                                                                                  child: Center(
-                                                                                      child: Text(
-                                                                                    "Invite User",
-                                                                                    style: TextStyle(fontWeight: FontWeight.w400, color: ColorConstant.primary_color, fontFamily: "outfit", fontSize: 13),
-                                                                                  )),
-                                                                                )
-                                                                              : Container(),
-                                                                    )
+                                                                                  borderRadius: BorderRadius.circular(50),
+                                                                                ),
+                                                                              ),
+                                                                              child: Center(
+                                                                                  child: Text(
+                                                                                "Invite User",
+                                                                                style: TextStyle(fontWeight: FontWeight.w400, color: ColorConstant.primary_color, fontFamily: "outfit", fontSize: 13),
+                                                                              )),
+                                                                            )
+                                                                          : Container(),
+                                                                )
                                                     ],
                                                   ),
                                                 ),
@@ -1645,6 +1648,22 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                     flex: 2,
                                                     child: GestureDetector(
                                                       onTap: () {
+                                                        /* Navigator.push(context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) {
+                                                          return DmScreenNew(
+                                                            chatUserName:
+                                                                "${PriveateRoomData?.object?[index].roomQuestion} ",
+                                                            chatInboxUid:
+                                                                "${PriveateRoomData?.object?[index].uid ?? ""}",
+                                                            chatOtherUseruid:
+                                                                " ",
+                                                            chatUserProfile:
+                                                                " ",
+                                                            isRoom: true,
+                                                          );
+                                                        })); */
                                                         Navigator.push(context,
                                                             MaterialPageRoute(
                                                                 builder:
@@ -1698,55 +1717,61 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                               ?.object?[index]
                                                               .expertUserProfile ==
                                                           null
-                                                      ? User_Mood == "EXPERT"
+                                                      ? /*  User_Mood == "EXPERT"
                                                           ? SizedBox()
-                                                          : checkuserdata ==
-                                                                  "PARTIALLY_REGISTERED"
-                                                              ? SizedBox()
-                                                              : Expanded(
-                                                                  flex: 2,
-                                                                  child:
-                                                                      GestureDetector(
-                                                                    onTap: () {
-                                                                      Navigator.push(
-                                                                          context,
-                                                                          MaterialPageRoute(
-                                                                            builder: (context) =>
+                                                          :  */
+                                                      checkuserdata ==
+                                                              "PARTIALLY_REGISTERED"
+                                                          ? SizedBox()
+                                                          : Expanded(
+                                                              flex: 2,
+                                                              child:
+                                                                  GestureDetector(
+                                                                onTap: () {
+                                                                  Navigator.push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                        builder:
+                                                                            (context) =>
                                                                                 ExpertsScreen(RoomUUID: PriveateRoomData?.object?[index].uid),
-                                                                            // ExpertsScreen(RoomUUID:  PriveateRoomData?.object?[index].uid),
-                                                                          ));
-                                                                    },
-                                                                    child:
-                                                                        Container(
-                                                                      height:
-                                                                          40,
-                                                                      width: _width /
+                                                                        // ExpertsScreen(RoomUUID:  PriveateRoomData?.object?[index].uid),
+                                                                      ));
+                                                                },
+                                                                child:
+                                                                    Container(
+                                                                  height: 40,
+                                                                  width:
+                                                                      _width /
                                                                           2.48,
-                                                                      decoration:
-                                                                          BoxDecoration(
-                                                                        borderRadius:
-                                                                            BorderRadius.only(
-                                                                          bottomRight:
-                                                                              Radius.circular(4),
-                                                                        ),
-                                                                        color: Color(
-                                                                            0XFF9B9B9B),
-                                                                      ),
-                                                                      child:
-                                                                          Center(
-                                                                        child:
-                                                                            Text(
-                                                                          "Select Expert",
-                                                                          style: TextStyle(
-                                                                              fontWeight: FontWeight.w400,
-                                                                              color: Colors.white,
-                                                                              fontFamily: "outfit",
-                                                                              fontSize: 15),
-                                                                        ),
-                                                                      ),
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    borderRadius:
+                                                                        BorderRadius
+                                                                            .only(
+                                                                      bottomRight:
+                                                                          Radius.circular(
+                                                                              4),
+                                                                    ),
+                                                                    color: Color(
+                                                                        0XFF9B9B9B),
+                                                                  ),
+                                                                  child: Center(
+                                                                    child: Text(
+                                                                      "Select Expert",
+                                                                      style: TextStyle(
+                                                                          fontWeight: FontWeight
+                                                                              .w400,
+                                                                          color: Colors
+                                                                              .white,
+                                                                          fontFamily:
+                                                                              "outfit",
+                                                                          fontSize:
+                                                                              15),
                                                                     ),
                                                                   ),
-                                                                )
+                                                                ),
+                                                              ),
+                                                            )
                                                       : SizedBox(),
                                                 ],
                                               ),
@@ -1785,31 +1810,31 @@ class _RoomsScreenState extends State<RoomsScreen> {
                             ),
                             checkuserdata == "PARTIALLY_REGISTERED"
                                 ? SizedBox()
-                                : User_Mood == "EXPERT"
+                                : /* User_Mood == "EXPERT"
                                     ? SizedBox()
-                                    : Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            /* showDialog(
+                                    :  */
+                                Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        /* showDialog(
                                   context: context,
                                   builder: (_) => BlocProvider<CreateRoomCubit>(
                                       create: (context) => CreateRoomCubit(),
                                       child: CreateRoomScreen()),
                                 ); */
-                                            /*   CreatRoom(_height, _width); */
-                                            setState(() {
-                                              createRoomDailog = true;
-                                            });
-                                          },
-                                          child: CustomImageView(
-                                            imagePath:
-                                                ImageConstant.addroomimage,
-                                            height: 55,
-                                            alignment: Alignment.bottomRight,
-                                          ),
-                                        ),
+                                        /*   CreatRoom(_height, _width); */
+                                        setState(() {
+                                          createRoomDailog = true;
+                                        });
+                                      },
+                                      child: CustomImageView(
+                                        imagePath: ImageConstant.addroomimage,
+                                        height: 55,
+                                        alignment: Alignment.bottomRight,
                                       ),
+                                    ),
+                                  ),
                           ],
                         )
                       : Stack(

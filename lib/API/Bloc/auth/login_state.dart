@@ -11,6 +11,10 @@ class LoginLoadedState extends LoginState {
   final LoginModel loginModel;
   LoginLoadedState(this.loginModel);
 }
+class LoginLoginisExistFromOnBoardingLoadedState extends LoginState {
+  final LogInIsExistFromOnBoardingModel loginisexistfromonbordingmodel;
+  LoginLoginisExistFromOnBoardingLoadedState(this.loginisexistfromonbordingmodel);
+}
 
 class LoginErrorState extends LoginState {
   final dynamic error; 

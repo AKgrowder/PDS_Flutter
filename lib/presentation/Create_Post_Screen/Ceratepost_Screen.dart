@@ -46,7 +46,6 @@ import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
 import 'package:html/dom.dart' as dom;
 
-
 class CreateNewPost extends StatefulWidget {
   String? edittextdata;
   String? PostID;
@@ -146,8 +145,8 @@ class _CreateNewPostState extends State<CreateNewPost> {
 
   String? data;
   String title = "";
-  String description="";
-  String imageUrl="";
+  String description = "";
+  String imageUrl = "";
   Timer? _timer;
 /*   void _onTextChanged() {
     String text = postText.text;
@@ -210,9 +209,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     User_ID = prefs.getString(PreferencesKey.loginUserID);
     UserProfileImage = prefs.getString(PreferencesKey.UserProfile);
-    setState(() {
-      
-    });
+    setState(() {});
   }
 
   void dispose() {
@@ -510,12 +507,13 @@ class _CreateNewPostState extends State<CreateNewPost> {
               Expanded(
                   child: SingleChildScrollView(
                 physics: AlwaysScrollableScrollPhysics(),
-                scrollDirection: Axis.vertical, 
+                scrollDirection: Axis.vertical,
                 child: Column(
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(left: 15, right: 15),
                       child: FlutterMentions(
+                        textInputAction: TextInputAction.newline,
                         scrollPhysics: AlwaysScrollableScrollPhysics(),
                         defaultText: widget.edittextdata,
                         onChanged: (value) {
@@ -614,7 +612,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                         ],
                       ),
                     ),
-                    if(title.isNotEmpty)
+                    if (title.isNotEmpty)
                       /*Container(
                         height: 80,
                         decoration: ShapeDecoration(
@@ -655,7 +653,8 @@ class _CreateNewPostState extends State<CreateNewPost> {
                             fontWeight: FontWeight.bold,
                             fontSize: 15,
                           ),
-                          bodyStyle: TextStyle(color: Colors.grey, fontSize: 12),
+                          bodyStyle:
+                              TextStyle(color: Colors.grey, fontSize: 12),
                           errorBody: 'Show my custom error body',
                           errorTitle: 'Show my custom error title',
                           errorWidget: Container(
@@ -667,8 +666,10 @@ class _CreateNewPostState extends State<CreateNewPost> {
                           backgroundColor: Colors.grey[300],
                           borderRadius: 12,
                           removeElevation: false,
-                          boxShadow: [BoxShadow(blurRadius: 3, color: Colors.grey)],
-                          onTap: (){}, // This disables tap event
+                          boxShadow: [
+                            BoxShadow(blurRadius: 3, color: Colors.grey)
+                          ],
+                          onTap: () {}, // This disables tap event
                         ),
                       ),
                     if (widget.edittextdata != null)
@@ -2612,11 +2613,13 @@ class _CreateNewPostState extends State<CreateNewPost> {
       if (value.length >= 1 && value.contains('@')) {
         print("value check --${value.endsWith(' #')}");
         if (value.endsWith(' #')) {
-          String data1 = value.split(' #').last.split(" ").first.replaceAll('#', '');
+          String data1 =
+              value.split(' #').last.split(" ").first.replaceAll('#', '');
           BlocProvider.of<AddPostCubit>(context)
               .GetAllHashtag(context, '10', '#${data1.trim()}');
         } else {
-          String data = value.split(' @').last.split(" ").first.replaceAll('@', '');
+          String data =
+              value.split(' @').last.split(" ").first.replaceAll('@', '');
           BlocProvider.of<AddPostCubit>(context)
               .search_user_for_inbox(context, '${data.trim()}', '1');
         }
@@ -2626,7 +2629,8 @@ class _CreateNewPostState extends State<CreateNewPost> {
         print("check lenth else-${value.length}");
       }
 
-      if (extractUrls(value).isNotEmpty && AnyLinkPreview.isValidLink(extractUrls(value).first)) {
+      if (extractUrls(value).isNotEmpty &&
+          AnyLinkPreview.isValidLink(extractUrls(value).first)) {
         if (_timer != null) {
           _timer?.cancel();
           _timer = Timer(Duration(seconds: 2), () {
@@ -2645,10 +2649,12 @@ class _CreateNewPostState extends State<CreateNewPost> {
     } else if (value.contains('#')) {
       title = "";
       print("check length-${value}");
-      String data1 = value.split(' #').last.split(" ").first.replaceAll('#', '');
+      String data1 =
+          value.split(' #').last.split(" ").first.replaceAll('#', '');
       BlocProvider.of<AddPostCubit>(context)
           .GetAllHashtag(context, '10', '#${data1.trim()}');
-      if (extractUrls(value).isNotEmpty && AnyLinkPreview.isValidLink(extractUrls(value).first)) {
+      if (extractUrls(value).isNotEmpty &&
+          AnyLinkPreview.isValidLink(extractUrls(value).first)) {
         if (_timer != null) {
           _timer?.cancel();
           _timer = Timer(Duration(seconds: 2), () {
@@ -2664,7 +2670,8 @@ class _CreateNewPostState extends State<CreateNewPost> {
           });
         }
       }
-    } else if (extractUrls(value).isNotEmpty && AnyLinkPreview.isValidLink(extractUrls(value).first)) {
+    } else if (extractUrls(value).isNotEmpty &&
+        AnyLinkPreview.isValidLink(extractUrls(value).first)) {
       if (_timer != null) {
         _timer?.cancel();
         _timer = Timer(Duration(seconds: 2), () {
@@ -2680,14 +2687,13 @@ class _CreateNewPostState extends State<CreateNewPost> {
         });
       }
     } else {
-        setState(() {
-          // postText.text = postText.text + ' ' + postTexContrlloer.join(' ,');
-          istageData = false;
-          isHeshTegData = false;
-          title = "";
-        });
-      }
-
+      setState(() {
+        // postText.text = postText.text + ' ' + postTexContrlloer.join(' ,');
+        istageData = false;
+        isHeshTegData = false;
+        title = "";
+      });
+    }
   }
 
   List<String> extractUrls(String text) {
@@ -2696,26 +2702,25 @@ class _CreateNewPostState extends State<CreateNewPost> {
       caseSensitive: false,
     );
 
-    List<String> urls = regExp.allMatches(text).map((match) => match.group(0)!).toList();
+    List<String> urls =
+        regExp.allMatches(text).map((match) => match.group(0)!).toList();
     urls.forEach((element) {
       print("url ===============> $element");
     });
     List<String> finalUrls = [];
     RegExp urlRegex = RegExp(r"(http(s)?://)", caseSensitive: false);
     urls.forEach((element) {
-      if(urlRegex.allMatches(element).toList().length > 1){
+      if (urlRegex.allMatches(element).toList().length > 1) {
         String xyz = element.replaceAll("http", ",http");
         List<String> splitted = xyz.split(RegExp(r",|;"));
         splitted.forEach((element1) {
-          if(element1.isNotEmpty)
-            finalUrls.add(element1);
+          if (element1.isNotEmpty) finalUrls.add(element1);
         });
-      }else{
+      } else {
         finalUrls.add(element);
       }
     });
     return finalUrls;
-
   }
 /* 
   onChangeMethod(String value) {
@@ -3355,7 +3360,6 @@ class _CreateNewPostState extends State<CreateNewPost> {
             "postDataType": "IMAGE",
             "postType": soicalData[indexx].toString().toUpperCase(),
             "thumbnailImageUrl": imageDataPost?.object?.data?.first,
-
           };
           BlocProvider.of<AddPostCubit>(context).InvitationAPI(context, param);
         } else if (pickedFile?.path != null && postText.text.isNotEmpty) {
@@ -3386,7 +3390,10 @@ class _CreateNewPostState extends State<CreateNewPost> {
                 "postUid": widget.PostID
               };
             } else {
-                param = {"description": postText.text, "postType": soicalData[indexx].toString().toUpperCase()};
+              param = {
+                "description": postText.text,
+                "postType": soicalData[indexx].toString().toUpperCase()
+              };
             }
 
             BlocProvider.of<AddPostCubit>(context)
@@ -3463,8 +3470,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
       quality: 100,
     );
 
-      return uint8list!;
-
+    return uint8list!;
   }
 
   String getTimeDifference(DateTime dateTime) {
@@ -3616,8 +3622,6 @@ class ViewerPage extends StatelessWidget {
     );
   }
 }
-
-
 
 class CustomTextEditingController extends TextEditingController {
   Color currentColor = Colors.black;
