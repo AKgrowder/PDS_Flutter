@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/API/Bloc/CreateStory_Bloc/CreateStory_Cubit.dart';
 import 'package:pds/API/Model/storyModel/stroyModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stories_editor/stories_editor.dart';
+import 'package:pds/presentation/stories_editor/stories_editor.dart';
 import '../../API/Bloc/CreateStory_Bloc/CreateStory_state.dart';
 import '../../API/Model/CreateStory_Model/CreateStory_model.dart';
 import '../../core/utils/color_constant.dart';
