@@ -20,668 +20,668 @@ import '../../API/Bloc/Comapny_Manage_bloc/Comapny_Manage_state.dart';
 import '../../core/utils/sharedPreferences.dart';
 
 class CreateComapnyScreen extends StatefulWidget {
-  const CreateComapnyScreen({Key? key}) : super(key: key);
+ const CreateComapnyScreen({Key? key}) : super(key: key);
 
-  @override
-  State<CreateComapnyScreen> createState() => _CreateComapnyScreenState();
+ @override
+ State<CreateComapnyScreen> createState() => _CreateComapnyScreenState();
 }
 
 class _CreateComapnyScreenState extends State<CreateComapnyScreen> {
-  List<String>? list;
+ List<String>? list;
 
-  File? _image;
-  ImagePicker picker = ImagePicker();
-  ChooseDocument? chooseDocumentuploded;
-  double value2 = 0.0;
-  double documentuploadsize = 0;
-  String? User_ID;
-  bool isChecked = false;
-  String? dropdownValue;
-  TextEditingController comapnyNameController = TextEditingController();
-  TextEditingController pageIDController = TextEditingController();
-  TextEditingController descController = TextEditingController();
-  GetAllCompanyType? getAllcompnayType;
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+ File? _image;
+ ImagePicker picker = ImagePicker();
+ ChooseDocument? chooseDocumentuploded;
+ double value2 = 0.0;
+ double documentuploadsize = 0;
+ String? User_ID;
+ bool isChecked = false;
+ String? dropdownValue;
+ TextEditingController comapnyNameController = TextEditingController();
+ TextEditingController pageIDController = TextEditingController();
+ TextEditingController descController = TextEditingController();
+ GetAllCompanyType? getAllcompnayType;
+ GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  dataSetUpMethod() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
+ dataSetUpMethod() async {
+   final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    User_ID = prefs.getString(PreferencesKey.loginUserID);
-    int? a = prefs.getInt(PreferencesKey.mediaSize);
-    documentuploadsize = double.parse("${a}");
-  }
+   User_ID = prefs.getString(PreferencesKey.loginUserID);
+   int? a = prefs.getInt(PreferencesKey.mediaSize);
+   documentuploadsize = double.parse("${a}");
+ }
 
-  @override
-  void initState() {
-    BlocProvider.of<ComapnyManageCubit>(context).getAllCompnayType(context);
-    dataSetUpMethod();
-    super.initState();
-  }
+ @override
+ void initState() {
+   BlocProvider.of<ComapnyManageCubit>(context).getAllCompnayType(context);
+   dataSetUpMethod();
+   super.initState();
+ }
 
-  @override
-  Widget build(BuildContext context) {
-    double _width = MediaQuery.of(context).size.width;
-    double _height = MediaQuery.of(context).size.height;
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          leading: GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Icon(
-              Icons.arrow_back,
-              color: Colors.grey,
-            ),
-          ),
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          title: Text(
-            "Create Company Page",
-            style: TextStyle(
-              // fontFamily: 'outfit',
-              color: Colors.black, fontWeight: FontWeight.bold,
-              fontSize: 20,
-            ),
-          ),
-          centerTitle: true,
-        ),
-        body: BlocConsumer<ComapnyManageCubit, ComapnyManageState>(
-          listener: (context, state) {
-            if (state is GetAllCompanyTypeGet) {
-              list = state.getAllcompnayType.object;
-            }
-            if (state is chooseDocumentLoadedState) {
-              print("chooseDocumentLoadedState");
-              if (state.chooseDocument.object == null) {
-                SnackBar snackBar = SnackBar(
-                  content: Text(state.chooseDocument.message.toString()),
-                  backgroundColor: ColorConstant.primary_color,
-                );
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              } else {
-                // widget.newProfileData?.object?.userProfilePic = null;
-                chooseDocumentuploded = state.chooseDocument;
-              }
-            }
+ @override
+ Widget build(BuildContext context) {
+   double _width = MediaQuery.of(context).size.width;
+   double _height = MediaQuery.of(context).size.height;
+   return SafeArea(
+     child: Scaffold(
+       appBar: AppBar(
+         leading: GestureDetector(
+           onTap: () {
+             Navigator.pop(context);
+           },
+           child: Icon(
+             Icons.arrow_back,
+             color: Colors.grey,
+           ),
+         ),
+         elevation: 0,
+         backgroundColor: Colors.transparent,
+         title: Text(
+           "Create Company Page",
+           style: TextStyle(
+             // fontFamily: 'outfit',
+             color: Colors.black, fontWeight: FontWeight.bold,
+             fontSize: 20,
+           ),
+         ),
+         centerTitle: true,
+       ),
+       body: BlocConsumer<ComapnyManageCubit, ComapnyManageState>(
+         listener: (context, state) {
+           if (state is GetAllCompanyTypeGet) {
+             list = state.getAllcompnayType.object;
+           }
+           if (state is chooseDocumentLoadedState) {
+             print("chooseDocumentLoadedState");
+             if (state.chooseDocument.object == null) {
+               SnackBar snackBar = SnackBar(
+                 content: Text(state.chooseDocument.message.toString()),
+                 backgroundColor: ColorConstant.primary_color,
+               );
+               ScaffoldMessenger.of(context).showSnackBar(snackBar);
+             } else {
+               // widget.newProfileData?.object?.userProfilePic = null;
+               chooseDocumentuploded = state.chooseDocument;
+             }
+           }
 
-            if (state is compenypagelodedstate) {
-              print("compenypagelodedstate");
+           if (state is compenypagelodedstate) {
+             print("compenypagelodedstate");
 
-              SnackBar snackBar = SnackBar(
-                content: Text(state.compenypagemodel.object.toString()),
-                backgroundColor: ColorConstant.primary_color,
-              );
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              Navigator.pop(context);
-            }
-            if (state is ComapnyManageErrorState) {
-              SnackBar snackBar = SnackBar(
-                content: Text(state.error.toString()),
-                backgroundColor: ColorConstant.primary_color,
-              );
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            }
-          },
-          builder: (context, state) {
-            return SingleChildScrollView(
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Container(
-                        height: 150,
-                        width: 150,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white,
-                        ),
-                        child: Stack(
-                          children: [
-                            chooseDocumentuploded?.object != null
-                                ? Padding(
-                                    padding: const EdgeInsets.all(4.0),
-                                    child: ClipOval(
-                                      child: FittedBox(
-                                        child: CachedNetworkImage(
-                                          placeholder: (context, url) {
-                                            return CircularProgressIndicator(
-                                              color:
-                                                  ColorConstant.primary_color,
-                                            );
-                                          },
-                                          height: 150,
-                                          width: 150,
-                                          imageUrl:
-                                              '${chooseDocumentuploded?.object.toString()}',
-                                          errorWidget: (context, url, error) =>
-                                              Icon(Icons.error),
-                                          fit: BoxFit.fill,
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                : Center(
-                                    child: FittedBox(
-                                      child: Image.asset(
-                                        ImageConstant.tomcruse,
-                                        // fit: BoxFit.cover,
-                                        height: 150,
-                                        width: 150,
-                                      ),
-                                    ),
-                                  ),
-                            Positioned(
-                              bottom: 7,
-                              right: -0,
-                              child: GestureDetector(
-                                onTap: () {
-                                  gallerypicker();
-                                },
-                                child: Container(
-                                  height: 40,
-                                  width: 40,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: Color(0xffFFFFFF), width: 4),
-                                    shape: BoxShape.circle,
-                                    color: Color(0xffFBD8D9),
-                                  ),
-                                  child: Icon(
-                                    Icons.camera_alt_outlined,
-                                    color: ColorConstant.primary_color,
-                                  ),
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          const EdgeInsets.only(left: 25, right: 25, top: 30),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            height: 45,
-                            width: _width,
-                            decoration: BoxDecoration(
-                                color: ColorConstant.primaryLight_color,
-                                borderRadius: BorderRadius.circular(5)),
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 15),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "Company Details",
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.black),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 15),
-                            child: Text(
-                              "Company Name",
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                          Container(
-                            width: _width,
-                            child: CustomTextFormField(
-                              controller: comapnyNameController,
-                              maxLength: 50,
-                              margin: EdgeInsets.only(
-                                top: 10,
-                              ),
+             SnackBar snackBar = SnackBar(
+               content: Text(state.compenypagemodel.object.toString()),
+               backgroundColor: ColorConstant.primary_color,
+             );
+             ScaffoldMessenger.of(context).showSnackBar(snackBar);
+             Navigator.pop(context);
+           }
+           if (state is ComapnyManageErrorState) {
+             SnackBar snackBar = SnackBar(
+               content: Text(state.error.toString()),
+               backgroundColor: ColorConstant.primary_color,
+             );
+             ScaffoldMessenger.of(context).showSnackBar(snackBar);
+           }
+         },
+         builder: (context, state) {
+           return SingleChildScrollView(
+             child: Form(
+               key: _formKey,
+               child: Column(
+                 children: [
+                   Align(
+                     alignment: Alignment.bottomCenter,
+                     child: Container(
+                       height: 150,
+                       width: 150,
+                       decoration: BoxDecoration(
+                         shape: BoxShape.circle,
+                         color: Colors.white,
+                       ),
+                       child: Stack(
+                         children: [
+                           chooseDocumentuploded?.object != null
+                               ? Padding(
+                                   padding: const EdgeInsets.all(4.0),
+                                   child: ClipOval(
+                                     child: FittedBox(
+                                       child: CachedNetworkImage(
+                                         placeholder: (context, url) {
+                                           return CircularProgressIndicator(
+                                             color:
+                                                 ColorConstant.primary_color,
+                                           );
+                                         },
+                                         height: 150,
+                                         width: 150,
+                                         imageUrl:
+                                             '${chooseDocumentuploded?.object.toString()}',
+                                         errorWidget: (context, url, error) =>
+                                             Icon(Icons.error),
+                                         fit: BoxFit.fill,
+                                       ),
+                                     ),
+                                   ),
+                                 )
+                               : Center(
+                                   child: FittedBox(
+                                     child: Image.asset(
+                                       ImageConstant.tomcruse,
+                                       // fit: BoxFit.cover,
+                                       height: 150,
+                                       width: 150,
+                                     ),
+                                   ),
+                                 ),
+                           Positioned(
+                             bottom: 7,
+                             right: -0,
+                             child: GestureDetector(
+                               onTap: () {
+                                 gallerypicker();
+                               },
+                               child: Container(
+                                 height: 40,
+                                 width: 40,
+                                 decoration: BoxDecoration(
+                                   border: Border.all(
+                                       color: Color(0xffFFFFFF), width: 4),
+                                   shape: BoxShape.circle,
+                                   color: Color(0xffFBD8D9),
+                                 ),
+                                 child: Icon(
+                                   Icons.camera_alt_outlined,
+                                   color: ColorConstant.primary_color,
+                                 ),
+                               ),
+                             ),
+                           )
+                         ],
+                       ),
+                     ),
+                   ),
+                   Padding(
+                     padding:
+                         const EdgeInsets.only(left: 25, right: 25, top: 30),
+                     child: Column(
+                       crossAxisAlignment: CrossAxisAlignment.start,
+                       children: [
+                         Container(
+                           height: 45,
+                           width: _width,
+                           decoration: BoxDecoration(
+                               color: ColorConstant.primaryLight_color,
+                               borderRadius: BorderRadius.circular(5)),
+                           child: Padding(
+                             padding: const EdgeInsets.only(left: 15),
+                             child: Row(
+                               crossAxisAlignment: CrossAxisAlignment.center,
+                               children: [
+                                 Text(
+                                   "Company Details",
+                                   style: TextStyle(
+                                       fontSize: 15,
+                                       fontWeight: FontWeight.w500,
+                                       color: Colors.black),
+                                 ),
+                               ],
+                             ),
+                           ),
+                         ),
+                         Padding(
+                           padding: const EdgeInsets.only(top: 15),
+                           child: Text(
+                             "Company Name",
+                             style: TextStyle(
+                               fontSize: 15,
+                               fontWeight: FontWeight.w500,
+                               color: Colors.black,
+                             ),
+                           ),
+                         ),
+                         Container(
+                           width: _width,
+                           child: CustomTextFormField(
+                             controller: comapnyNameController,
+                             maxLength: 50,
+                             margin: EdgeInsets.only(
+                               top: 10,
+                             ),
 
-                              validator: (value) {
-                                RegExp nameRegExp =
-                                    RegExp(r"^[a-zA-Z0-9\s'@]+$");
-
-                                if (value!.isEmpty) {
-                                  return 'Enter Company Name';
-                                } else if (!nameRegExp.hasMatch(value)) {
-                                  return 'Input cannot contains prohibited special characters';
-                                } else if (value.length < 3) {
-                                  return 'Minimum length required';
-                                } else if (value.contains('..')) {
-                                  return 'Company Name does not contain is correct';
-                                }
-
-                                return null;
-                              },
-                              // textStyle: theme.textTheme.titleMedium!,
-                              hintText: "Enter name",
-                              textStyle: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                wordSpacing: 0,
-                                letterSpacing: 0,
-                              ),
-                              // hintStyle: theme.textTheme.titleMedium!,
-                              textInputAction: TextInputAction.next,
-                              filled: true,
-
-                              fillColor: appTheme.gray100,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 10),
-                            child: Text(
-                              "Page ID",
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                          Container(
-                            width: _width,
-                            child: CustomTextFormField(
-                              controller: pageIDController,
-                              maxLength: 30,
-                              margin: EdgeInsets.only(
-                                top: 10,
-                              ),
-
-                              validator: (value) {
-                                RegExp nameRegExp =
-                                    RegExp(r"^[a-zA-Z0-9\s']+$");
-
-                                if (value!.isEmpty) {
-                                  return 'Enter User ID';
-                                } else if (value.length < 3 ||
-                                    value.length > 50) {
-                                  return 'Minimum length required';
-                                } else if (!nameRegExp.hasMatch(value)) {
-                                  return 'Input cannot contains prohibited special characters';
-                                }
-                                return null;
-                              },
-                              // textStyle: theme.textTheme.titleMedium!,
-                              hintText: "Enter page ID",
-                              textStyle: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                wordSpacing: 0,
-                                letterSpacing: 0,
-                              ),
-                              // hintStyle: theme.textTheme.titleMedium!,
-                              textInputAction: TextInputAction.next,
-                              filled: true,
-
-                              fillColor: appTheme.gray100,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 10),
-                            child: Text(
-                              "Company Type",
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                          Container(
-                            height: 50,
-                            width: _width,
-                            margin: EdgeInsets.only(
-                              top: 10,
-                            ),
-                            decoration: BoxDecoration(
-                                color: Colors.grey[100],
-                                border: Border.all(color: Colors.grey.shade200),
-                                borderRadius: BorderRadius.circular(5)),
-                            child: DropdownButtonHideUnderline(
-                              child: Padding(
-                                padding: EdgeInsets.only(left: 12),
-                                child: DropdownButton<String>(
-                                  icon: Icon(Icons.keyboard_arrow_down),
-                                  value: dropdownValue,
-                                  hint: Text('Select company type'),
-                                  onChanged: (String? value) {
-                                    // When the user selects an option from the dropdown.
-                                    setState(() {
-                                      dropdownValue = value!;
-                                    });
-                                  },
-                                  items: list?.map<DropdownMenuItem<String>>(
-                                      (String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(
-                                        value,
-                                      ),
-                                    );
-                                  }).toList(),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              top: 10,
-                            ),
-                            child: Text(
-                              "Description",
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                          Container(
-                            width: _width,
-                            child: CustomTextFormField(
-                              maxLength: 250,
-                              maxLines: 4,
-                              controller: descController,
-                              margin: EdgeInsets.only(
-                                top: 10,
-                              ),
-
-                              /* validator: (value) {
+                             validator: (value) {
                                RegExp nameRegExp =
                                    RegExp(r"^[a-zA-Z0-9\s'@]+$");
-                               if (!nameRegExp.hasMatch(value!)) {
+
+                               if (value!.isEmpty) {
+                                 return 'Enter Company Name';
+                               } else if (!nameRegExp.hasMatch(value)) {
                                  return 'Input cannot contains prohibited special characters';
-                               } else if (value!.startsWith('..')) {
-                                 return 'Description does not contain is correct';
+                               } else if (value.length < 3) {
+                                 return 'Minimum length required';
+                               } else if (value.contains('..')) {
+                                 return 'Company Name does not contain is correct';
                                }
 
                                return null;
-                             }, */
-                              // textStyle: theme.textTheme.titleMedium!,
-                              hintText: "Type here...",
-                              textStyle: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                wordSpacing: 0,
-                                letterSpacing: 0,
-                              ),
-                              // hintStyle: theme.textTheme.titleMedium!,
-                              textInputAction: TextInputAction.next,
-                              filled: true,
+                             },
+                             // textStyle: theme.textTheme.titleMedium!,
+                             hintText: "Enter name",
+                             textStyle: TextStyle(
+                               fontWeight: FontWeight.w400,
+                               wordSpacing: 0,
+                               letterSpacing: 0,
+                             ),
+                             // hintStyle: theme.textTheme.titleMedium!,
+                             textInputAction: TextInputAction.next,
+                             filled: true,
 
-                              fillColor: appTheme.gray100,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 10,),
-                            child: Row(
-                              children: [
-                                Checkbox(
-                                  activeColor: ColorConstant.primary_color,
-                                  checkColor: Colors.white,
-                                  value: isChecked,
-                                  onChanged: (bool? value) {
-                                    super.setState(() {
-                                      isChecked = value!;
-                                    });
-                                  },
-                                ),
-                                Text(
-                                  "I have Read and Agree to",
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontFamily: 'Outfit',
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => Policies(
-                                            title: " ",
-                                            data: Policy_Data.turms_of_use,
-                                          ),
-                                        ));
-                                  },
-                                  child: Text(
-                                    "Terms of Use",
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      color: theme.colorScheme.primary,
-                                      fontSize: 12,
-                                      fontFamily: 'Outfit',
-                                      fontWeight: FontWeight.w500,
-                                      decoration: TextDecoration.underline,
-                                    ),
-                                  ),
-                                ),
-                                Text(
-                                  "&",
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    color: theme.colorScheme.primary,
-                                    fontSize: 12,
-                                    fontFamily: 'Outfit',
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 2),
-                                  child: Center(
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => Policies(
-                                                title: "",
-                                                data:
-                                                    Policy_Data.privacy_policy1,
-                                              ),
-                                            ));
-                                      },
-                                      child: Text(
-                                        "Privacy Policy",
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          color: theme.colorScheme.primary,
-                                          fontSize: 12,
-                                          fontFamily: 'Outfit',
-                                          fontWeight: FontWeight.w500,
-                                          decoration: TextDecoration.underline,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              if (isChecked &&
-                                  _formKey.currentState!.validate()) {
-                                textfiledvalidation();
-                              } else if (!isChecked) {
-                                SnackBar snackBar = SnackBar(
-                                  content: Text(
-                                    'Select Terms of Use and Privacy Policy',
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontFamily: 'outfit',
-                                    ),
-                                  ),
-                                  backgroundColor: ColorConstant.primary_color,
-                                );
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(snackBar);
+                             fillColor: appTheme.gray100,
+                           ),
+                         ),
+                         Padding(
+                           padding: const EdgeInsets.only(top: 10),
+                           child: Text(
+                             "Page ID",
+                             style: TextStyle(
+                               fontSize: 15,
+                               fontWeight: FontWeight.w500,
+                               color: Colors.black,
+                             ),
+                           ),
+                         ),
+                         Container(
+                           width: _width,
+                           child: CustomTextFormField(
+                             controller: pageIDController,
+                             maxLength: 30,
+                             margin: EdgeInsets.only(
+                               top: 10,
+                             ),
+
+                             validator: (value) {
+                               RegExp nameRegExp =
+                                   RegExp(r"^[a-zA-Z0-9\s']+$");
+
+                               if (value!.isEmpty) {
+                                 return 'Enter User ID';
+                               } else if (value.length < 3 ||
+                                   value.length > 50) {
+                                 return 'Minimum length required';
+                               } else if (!nameRegExp.hasMatch(value)) {
+                                 return 'Input cannot contains prohibited special characters';
+                               }
+                               return null;
+                             },
+                             // textStyle: theme.textTheme.titleMedium!,
+                             hintText: "Enter page ID",
+                             textStyle: TextStyle(
+                               fontWeight: FontWeight.w400,
+                               wordSpacing: 0,
+                               letterSpacing: 0,
+                             ),
+                             // hintStyle: theme.textTheme.titleMedium!,
+                             textInputAction: TextInputAction.next,
+                             filled: true,
+
+                             fillColor: appTheme.gray100,
+                           ),
+                         ),
+                         Padding(
+                           padding: const EdgeInsets.only(top: 10),
+                           child: Text(
+                             "Company Type",
+                             style: TextStyle(
+                               fontSize: 15,
+                               fontWeight: FontWeight.w500,
+                               color: Colors.black,
+                             ),
+                           ),
+                         ),
+                         Container(
+                           height: 50,
+                           width: _width,
+                           margin: EdgeInsets.only(
+                             top: 10,
+                           ),
+                           decoration: BoxDecoration(
+                               color: Colors.grey[100],
+                               border: Border.all(color: Colors.grey.shade200),
+                               borderRadius: BorderRadius.circular(5)),
+                           child: DropdownButtonHideUnderline(
+                             child: Padding(
+                               padding: EdgeInsets.only(left: 12),
+                               child: DropdownButton<String>(
+                                 icon: Icon(Icons.keyboard_arrow_down),
+                                 value: dropdownValue,
+                                 hint: Text('Select company type'),
+                                 onChanged: (String? value) {
+                                   // When the user selects an option from the dropdown.
+                                   setState(() {
+                                     dropdownValue = value!;
+                                   });
+                                 },
+                                 items: list?.map<DropdownMenuItem<String>>(
+                                     (String value) {
+                                   return DropdownMenuItem<String>(
+                                     value: value,
+                                     child: Text(
+                                       value,
+                                     ),
+                                   );
+                                 }).toList(),
+                               ),
+                             ),
+                           ),
+                         ),
+                         Padding(
+                           padding: const EdgeInsets.only(
+                             top: 10,
+                           ),
+                           child: Text(
+                             "Description",
+                             style: TextStyle(
+                               fontSize: 15,
+                               fontWeight: FontWeight.w500,
+                               color: Colors.black,
+                             ),
+                           ),
+                         ),
+                         Container(
+                           width: _width,
+                           child: CustomTextFormField(
+                             maxLength: 250,
+                             maxLines: 4,
+                             controller: descController,
+                             margin: EdgeInsets.only(
+                               top: 10,
+                             ),
+
+                             /* validator: (value) {
+                              RegExp nameRegExp =
+                                  RegExp(r"^[a-zA-Z0-9\s'@]+$");
+                              if (!nameRegExp.hasMatch(value!)) {
+                                return 'Input cannot contains prohibited special characters';
+                              } else if (value!.startsWith('..')) {
+                                return 'Description does not contain is correct';
                               }
-                            },
-                            // onTap: textfiledvalidation,
-                            child: Container(
-                              alignment: Alignment.center,
-                              height: 50,
-                              width: _width,
-                              decoration: BoxDecoration(
-                                  color: isChecked
-                                      ? ColorConstant.primary_color
-                                      : Color(0xFFAD5F59),
-                                  borderRadius: BorderRadius.circular(5)),
-                              child: Text(
-                                'Submit',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontFamily: 'outfit',
-                                    fontWeight: FontWeight.w600),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            );
-          },
-        ),
-      ),
-    );
-  }
 
-  textfiledvalidation() {
-    if (dropdownValue == null) {
-      SnackBar snackBar = SnackBar(
-        content: Text(
-          'Select Company Type',
-          style: TextStyle(
-            fontSize: 15,
-            fontFamily: 'outfit',
-          ),
-        ),
-        backgroundColor: ColorConstant.primary_color,
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    } else {
-      var params = {
-        "companyPageName": comapnyNameController.text,
-        "companyPageType": dropdownValue,
-        "pageDescription": descController.text,
-        "pageId": pageIDController.text,
-        "companyPageProfilePic": chooseDocumentuploded?.object.toString(),
-      };
-      print("parems--$params");
-      BlocProvider.of<ComapnyManageCubit>(context)
-          .compenypageuplod(params, context)
-          .then((value) => BlocProvider.of<ComapnyManageCubit>(context)
-              .getallcompenypagee(context));
-    }
-  }
+                              return null;
+                            }, */
+                             // textStyle: theme.textTheme.titleMedium!,
+                             hintText: "Type here...",
+                             textStyle: TextStyle(
+                               fontWeight: FontWeight.w400,
+                               wordSpacing: 0,
+                               letterSpacing: 0,
+                             ),
+                             // hintStyle: theme.textTheme.titleMedium!,
+                             textInputAction: TextInputAction.next,
+                             filled: true,
 
-  Future<void> gallerypicker() async {
-    print("this is the gallerypicker");
-    var pickedImageFile = await picker.pickImage(source: ImageSource.gallery);
-    super.setState(() {
-      _image = File(pickedImageFile?.path ?? '');
-    });
-    if (_image != null) {
-      if (!_isGifOrSvg(_image!.path)) {
-        _image = File(_image!.path);
-        super.setState(() {});
-        getUploadeProfile(_image!.path, 1, _image!, 0);
-      }
-    }
-    print("image selcted Path set-->$_image");
-  }
+                             fillColor: appTheme.gray100,
+                           ),
+                         ),
+                         Padding(
+                           padding: const EdgeInsets.only(top: 10,),
+                           child: Row(
+                             children: [
+                               Checkbox(
+                                 activeColor: ColorConstant.primary_color,
+                                 checkColor: Colors.white,
+                                 value: isChecked,
+                                 onChanged: (bool? value) {
+                                   super.setState(() {
+                                     isChecked = value!;
+                                   });
+                                 },
+                               ),
+                               Text(
+                                 "I have Read and Agree to",
+                                 overflow: TextOverflow.ellipsis,
+                                 style: TextStyle(
+                                   fontSize: 12,
+                                   fontFamily: 'Outfit',
+                                   fontWeight: FontWeight.w500,
+                                 ),
+                               ),
+                               GestureDetector(
+                                 onTap: () {
+                                   Navigator.push(
+                                       context,
+                                       MaterialPageRoute(
+                                         builder: (context) => Policies(
+                                           title: " ",
+                                           data: Policy_Data.turms_of_use,
+                                         ),
+                                       ));
+                                 },
+                                 child: Text(
+                                   "Terms of Use",
+                                   overflow: TextOverflow.ellipsis,
+                                   style: TextStyle(
+                                     color: theme.colorScheme.primary,
+                                     fontSize: 12,
+                                     fontFamily: 'Outfit',
+                                     fontWeight: FontWeight.w500,
+                                     decoration: TextDecoration.underline,
+                                   ),
+                                 ),
+                               ),
+                               Text(
+                                 "&",
+                                 overflow: TextOverflow.ellipsis,
+                                 style: TextStyle(
+                                   color: theme.colorScheme.primary,
+                                   fontSize: 12,
+                                   fontFamily: 'Outfit',
+                                   fontWeight: FontWeight.w500,
+                                 ),
+                               ),
+                               Padding(
+                                 padding: const EdgeInsets.only(right: 2),
+                                 child: Center(
+                                   child: GestureDetector(
+                                     onTap: () {
+                                       Navigator.push(
+                                           context,
+                                           MaterialPageRoute(
+                                             builder: (context) => Policies(
+                                               title: "",
+                                               data:
+                                                   Policy_Data.privacy_policy1,
+                                             ),
+                                           ));
+                                     },
+                                     child: Text(
+                                       "Privacy Policy",
+                                       overflow: TextOverflow.ellipsis,
+                                       style: TextStyle(
+                                         color: theme.colorScheme.primary,
+                                         fontSize: 12,
+                                         fontFamily: 'Outfit',
+                                         fontWeight: FontWeight.w500,
+                                         decoration: TextDecoration.underline,
+                                       ),
+                                     ),
+                                   ),
+                                 ),
+                               ),
+                             ],
+                           ),
+                         ),
+                         GestureDetector(
+                           onTap: () {
+                             if (isChecked &&
+                                 _formKey.currentState!.validate()) {
+                               textfiledvalidation();
+                             } else if (!isChecked) {
+                               SnackBar snackBar = SnackBar(
+                                 content: Text(
+                                   'Select Terms of Use and Privacy Policy',
+                                   style: TextStyle(
+                                     fontSize: 15,
+                                     fontFamily: 'outfit',
+                                   ),
+                                 ),
+                                 backgroundColor: ColorConstant.primary_color,
+                               );
+                               ScaffoldMessenger.of(context)
+                                   .showSnackBar(snackBar);
+                             }
+                           },
+                           // onTap: textfiledvalidation,
+                           child: Container(
+                             alignment: Alignment.center,
+                             height: 50,
+                             width: _width,
+                             decoration: BoxDecoration(
+                                 color: isChecked
+                                     ? ColorConstant.primary_color
+                                     : Color(0xFFAD5F59),
+                                 borderRadius: BorderRadius.circular(5)),
+                             child: Text(
+                               'Submit',
+                               style: TextStyle(
+                                   color: Colors.white,
+                                   fontFamily: 'outfit',
+                                   fontWeight: FontWeight.w600),
+                             ),
+                           ),
+                         ),
+                       ],
+                     ),
+                   )
+                 ],
+               ),
+             ),
+           );
+         },
+       ),
+     ),
+   );
+ }
 
-  bool _isGifOrSvg(String imagePath) {
-    // Check if the image file has a .gif or .svg extension
-    final lowerCaseImagePath = imagePath.toLowerCase();
-    return lowerCaseImagePath.endsWith('.gif') ||
-        lowerCaseImagePath.endsWith('.svg') ||
-        lowerCaseImagePath.endsWith('.pdf') ||
-        lowerCaseImagePath.endsWith('.doc') ||
-        lowerCaseImagePath.endsWith('.mp4') ||
-        lowerCaseImagePath.endsWith('.mov') ||
-        lowerCaseImagePath.endsWith('.mp3') ||
-        lowerCaseImagePath.endsWith('.m4a');
-  }
+ textfiledvalidation() {
+   if (dropdownValue == null) {
+     SnackBar snackBar = SnackBar(
+       content: Text(
+         'Select Company Type',
+         style: TextStyle(
+           fontSize: 15,
+           fontFamily: 'outfit',
+         ),
+       ),
+       backgroundColor: ColorConstant.primary_color,
+     );
+     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+   } else {
+     var params = {
+       "companyPageName": comapnyNameController.text,
+       "companyPageType": dropdownValue,
+       "pageDescription": descController.text,
+       "pageId": pageIDController.text,
+       "companyPageProfilePic": chooseDocumentuploded?.object.toString(),
+     };
+     print("parems--$params");
+     BlocProvider.of<ComapnyManageCubit>(context)
+         .compenypageuplod(params, context)
+         .then((value) => BlocProvider.of<ComapnyManageCubit>(context)
+             .getallcompenypagee(context));
+   }
+ }
 
-  getUploadeProfile(
-      String filepath, int decimals, File file1, int Index) async {
-    var file = File(filepath);
-    int bytes = await file.length();
-    if (bytes <= 0) return "0 B";
-    const suffixes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
-    var i = (log(bytes) / log(1024)).floor();
-    var STR = ((bytes / pow(1024, i)).toStringAsFixed(decimals));
-    print('getFileSizevariable-${file1.path}');
-    value2 = double.parse(STR);
-    print(file1);
-    print(value2);
-    switch (i) {
-      case 0:
-        BlocProvider.of<ComapnyManageCubit>(context)
-            .upoldeProfilePic(_image!, context);
-        break;
-      case 1:
-        print("Done file size KB");
+ Future<void> gallerypicker() async {
+   print("this is the gallerypicker");
+   var pickedImageFile = await picker.pickImage(source: ImageSource.gallery);
+   super.setState(() {
+     _image = File(pickedImageFile?.path ?? '');
+   });
+   if (_image != null) {
+     if (!_isGifOrSvg(_image!.path)) {
+       _image = File(_image!.path);
+       super.setState(() {});
+       getUploadeProfile(_image!.path, 1, _image!, 0);
+     }
+   }
+   print("image selcted Path set-->$_image");
+ }
 
-        print('filenamecheckKB-${file1.path}');
-        BlocProvider.of<ComapnyManageCubit>(context)
-            .upoldeProfilePic(_image!, context);
-        super.setState(() {});
+ bool _isGifOrSvg(String imagePath) {
+   // Check if the image file has a .gif or .svg extension
+   final lowerCaseImagePath = imagePath.toLowerCase();
+   return lowerCaseImagePath.endsWith('.gif') ||
+       lowerCaseImagePath.endsWith('.svg') ||
+       lowerCaseImagePath.endsWith('.pdf') ||
+       lowerCaseImagePath.endsWith('.doc') ||
+       lowerCaseImagePath.endsWith('.mp4') ||
+       lowerCaseImagePath.endsWith('.mov') ||
+       lowerCaseImagePath.endsWith('.mp3') ||
+       lowerCaseImagePath.endsWith('.m4a');
+ }
 
-        break;
-      case 2:
-        if (value2 > documentuploadsize) {
-          print(
-              "this file size ${value2} ${suffixes[i]} Selected Max size ${documentuploadsize}MB");
+ getUploadeProfile(
+     String filepath, int decimals, File file1, int Index) async {
+   var file = File(filepath);
+   int bytes = await file.length();
+   if (bytes <= 0) return "0 B";
+   const suffixes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+   var i = (log(bytes) / log(1024)).floor();
+   var STR = ((bytes / pow(1024, i)).toStringAsFixed(decimals));
+   print('getFileSizevariable-${file1.path}');
+   value2 = double.parse(STR);
+   print(file1);
+   print(value2);
+   switch (i) {
+     case 0:
+       BlocProvider.of<ComapnyManageCubit>(context)
+           .upoldeProfilePic(_image!, context);
+       break;
+     case 1:
+       print("Done file size KB");
 
-          showDialog(
-            context: context,
-            builder: (ctx) => AlertDialog(
-              title: Text("Max Size ${documentuploadsize}MB"),
-              content: Text(
-                  "This file size ${value2} ${suffixes[i]} Selected Max size ${documentuploadsize}MB"),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(ctx).pop();
-                  },
-                  child: Container(
-                    // color: Colors.green,
-                    padding: const EdgeInsets.all(10),
-                    child: const Text("Okay"),
-                  ),
-                ),
-              ],
-            ),
-          );
-        } else {
-          print("Done file Size 12MB");
-          print('filecheckPath-${file1.path}');
-          print('filecheckPath-${file1.path}');
-          BlocProvider.of<ComapnyManageCubit>(context)
-              .upoldeProfilePic(_image!, context);
-        }
+       print('filenamecheckKB-${file1.path}');
+       BlocProvider.of<ComapnyManageCubit>(context)
+           .upoldeProfilePic(_image!, context);
+       super.setState(() {});
 
-        break;
-      default:
-    }
+       break;
+     case 2:
+       if (value2 > documentuploadsize) {
+         print(
+             "this file size ${value2} ${suffixes[i]} Selected Max size ${documentuploadsize}MB");
 
-    return STR;
-  }
+         showDialog(
+           context: context,
+           builder: (ctx) => AlertDialog(
+             title: Text("Max Size ${documentuploadsize}MB"),
+             content: Text(
+                 "This file size ${value2} ${suffixes[i]} Selected Max size ${documentuploadsize}MB"),
+             actions: <Widget>[
+               TextButton(
+                 onPressed: () {
+                   Navigator.of(ctx).pop();
+                 },
+                 child: Container(
+                   // color: Colors.green,
+                   padding: const EdgeInsets.all(10),
+                   child: const Text("Okay"),
+                 ),
+               ),
+             ],
+           ),
+         );
+       } else {
+         print("Done file Size 12MB");
+         print('filecheckPath-${file1.path}');
+         print('filecheckPath-${file1.path}');
+         BlocProvider.of<ComapnyManageCubit>(context)
+             .upoldeProfilePic(_image!, context);
+       }
+
+       break;
+     default:
+   }
+
+   return STR;
+ }
 }

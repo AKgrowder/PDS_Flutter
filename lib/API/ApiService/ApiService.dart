@@ -210,6 +210,28 @@ class ApiServices {
     }
   }
 
+  postApiwithOutToken(
+      String APIurl, Map<String, dynamic> params, BuildContext context) async {
+    final headers1 = {
+      'Content-Type': 'application/json',
+    };
+
+    final hasInternet = await checkInternet();
+    if (hasInternet == true) {
+      print("check Valuie");
+      final response = await post(Uri.parse(baseURL + APIurl),
+          headers: headers1, body: json.encode(params));
+      print("responnce body -${response.body}");
+      return response;
+    } else {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => NoInterNetScreen(),
+          ));
+    }
+  }
+
   multipartFile2(
       String APIurl, Map<String, dynamic>? params, BuildContext context) async {
     await UpdateBaseURL();

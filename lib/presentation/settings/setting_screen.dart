@@ -52,7 +52,7 @@ var Setting_Array = [
   // "My Details",
   "Saved Threads",
   "Saved Pins",
-  "Change Password",
+  "Change Password", //2
   "Prefrences",
   "Support",
   "Policies",
@@ -136,7 +136,7 @@ class _SettingScreenState extends State<SettingScreen> {
   bool? deleteShow;
   @override
   void initState() {
-    print("accountcheck--${widget.module}");
+    print("accountcheck--${widget.getAssignedUsersOfCompanyPage?.message}");
     if (widget.accountType == 'PUBLIC') {
       super.setState(() {
         isSwitched = false;
@@ -367,6 +367,7 @@ class _SettingScreenState extends State<SettingScreen> {
                                 index == 4 ||
                                 index == 0 ||
                                 index == 3 ||
+                                 (User_CompnyPageModule != null && index ==2)||       
                                 (widget.module == false && index == 10) ||
                                 (User_CompnyPageModule == null &&
                                     index == 9 &&
