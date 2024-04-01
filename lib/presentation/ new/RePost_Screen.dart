@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
@@ -12,7 +13,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
-import 'package:hashtagable/widgets/hashtag_text.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:linkfy_text/linkfy_text.dart';
@@ -50,8 +51,6 @@ import '../../API/Model/NewProfileScreenModel/GetAppUserPost_Model.dart';
 import '../../API/Model/NewProfileScreenModel/GetSavePost_Model.dart';
 import '../Create_Post_Screen/CreatePostShow_ImageRow/photo_gallery-master/lib/photo_gallery.dart';
 import 'home_screen_new.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
 
 class RePostScreen extends StatefulWidget {
@@ -193,7 +192,7 @@ class _RePostScreenState extends State<RePostScreen> {
         pageControllers.add(PageController());
         currentPages.add(0);
       });
-      widget.GetAllPostData?.object?.forEach((element) {
+      widget.GetAllPostData?.object?.content?.forEach((element) {
         pageControllers.add(PageController());
         currentPages.add(0);
       });

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pds/API/Bloc/BlockUser_Bloc/Block_user_state.dart';
 import 'package:pds/API/Bloc/Comapny_Manage_bloc/Comapny_Manage_cubit.dart';
 import 'package:pds/API/Bloc/Comapny_Manage_bloc/Comapny_Manage_state.dart';
 import 'package:pds/core/utils/color_constant.dart';
@@ -25,6 +24,8 @@ class _DeleteComapnyDailogState extends State<DeleteComapnyDailog>
 
   TextEditingController reasonController = TextEditingController();
   String? User_ID;
+  Timer? timer;
+  int? secound;
 
   @override
   void initState() {
@@ -66,6 +67,11 @@ class _DeleteComapnyDailogState extends State<DeleteComapnyDailog>
                     context: context,
                     builder: (_) => FinalDeleteComapnyDailog(),
                   );
+
+                  Future.delayed(const Duration(seconds: 2), () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
+                  });
                 }
               },
               builder: (context, state) {

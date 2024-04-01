@@ -75,3 +75,70 @@ class Object {
     return data;
   }
 }
+
+
+
+
+
+
+class LogInIsExistFromOnBoardingModel {
+  String? message;
+  Object1? object;
+  bool? success;
+
+  LogInIsExistFromOnBoardingModel({this.message, this.object, this.success});
+
+  LogInIsExistFromOnBoardingModel.fromJson(Map<String, dynamic> json) {
+    message = json['message'];
+    object =
+        json['object'] != null ? new Object1.fromJson(json['object']) : null;
+    success = json['success'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['message'] = this.message;
+    if (this.object != null) {
+      data['object'] = this.object!.toJson();
+    }
+    data['success'] = this.success;
+    return data;
+  }
+}
+
+class Object1 {
+  String? userName;
+  String? name;
+  String? email;
+  String? module;
+  String? mobileNo;
+  String? password;
+
+  Object1(
+      {this.userName,
+      this.name,
+      this.email,
+      this.module,
+      this.mobileNo,
+      this.password});
+
+  Object1.fromJson(Map<String, dynamic> json) {
+    userName = json['userName'];
+    name = json['name'];
+    email = json['email'];
+    module = json['module'];
+    mobileNo = json['mobileNo'];
+    password = json['password'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['userName'] = this.userName;
+    data['name'] = this.name;
+    data['email'] = this.email;
+    data['module'] = this.module;
+    data['mobileNo'] = this.mobileNo;
+    data['password'] = this.password;
+    return data;
+  }
+}

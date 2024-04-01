@@ -529,6 +529,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                         Padding(
                           padding: const EdgeInsets.only(left: 15, right: 15),
                           child: FlutterMentions(
+                            textInputAction: TextInputAction.newline,
                             scrollPhysics: AlwaysScrollableScrollPhysics(),
                             defaultText: widget.edittextdata,
                             onChanged: (value) {

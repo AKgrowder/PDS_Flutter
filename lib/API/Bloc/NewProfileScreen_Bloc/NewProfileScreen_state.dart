@@ -123,6 +123,7 @@ class DMChatListLoadedState extends NewProfileSState {
   final OnTimeDMModel DMChatList;
   DMChatListLoadedState(this.DMChatList);
 }
+
 class SearchHistoryDataAddxtends extends NewProfileSState {
   final SearchUserForInbox searchUserForInbox;
   SearchHistoryDataAddxtends(this.searchUserForInbox);
@@ -132,6 +133,7 @@ class GetAllHashtagState extends NewProfileSState {
   final HasDataModel getAllHashtag;
   GetAllHashtagState(this.getAllHashtag);
 }
+
 class AddPostErrorState extends NewProfileSState {
   final dynamic error;
   AddPostErrorState(this.error);
@@ -146,20 +148,18 @@ class RePostLoadedState extends NewProfileSState {
   final RePostModel RePost;
   RePostLoadedState(this.RePost);
 }
+
 class DeletePostLoadedState extends NewProfileSState {
   final DeletePostModel DeletePost;
   DeletePostLoadedState(this.DeletePost);
 }
-
 
 class Getallcompenypagelodedstate extends NewProfileSState {
   final GetAllCompenyPageModel getallcompenypagemodel;
   Getallcompenypagelodedstate(this.getallcompenypagemodel);
 }
 
-
 class GetAssignedUsersOfCompanyPageLoadedState extends NewProfileSState {
   final GetAssignedUsersOfCompanyPage getAssignedUsersOfCompanyPage;
   GetAssignedUsersOfCompanyPageLoadedState(this.getAssignedUsersOfCompanyPage);
 }
-
