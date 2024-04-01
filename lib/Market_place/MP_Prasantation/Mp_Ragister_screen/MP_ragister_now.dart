@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pds/Market_place/MP_Prasantation/choose_your_category_screen/choose_category_screen.dart';
+import 'package:pds/Market_place/commenWiget.dart/commenButton.dart';
 import 'package:pds/Market_place/commenWiget.dart/commenFlushbar.dart';
 import 'package:pds/Market_place/commenWiget.dart/commenPrfrence.dart';
 import 'package:pds/widgets/custom_image_view.dart';
@@ -55,29 +56,6 @@ class _ChooseCatgoryState extends State<ChooseCatgory> {
       'isselected': false
     },
   ];
-
-  byDefaultSetindex() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? getInitallData = prefs.getString(
-        SharedPreferencesCommenEntity.navigationrouteChosseCatgorySelctedData);
-    int index =
-        _images.indexWhere((element) => element['value'] == getInitallData);
-    print("i want to check  index-$index");
-    print("i want to check $getInitallData ");
-
-    if (index != -1) {
-      _images[index]['isselected'] = true;
-    } else {
-      print('Image not found in the list.');
-    }
-    setState(() {});
-  }
-
-  @override
-  void initState() {
-    byDefaultSetindex();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -141,6 +119,7 @@ class _ChooseCatgoryState extends State<ChooseCatgory> {
                     setState(() {});
                   },
                   child: GridTile(
+                    
                     child: CustomImageView(
                       svgPath: _images[index]['image'],
                       fit: BoxFit.cover,
@@ -168,25 +147,27 @@ class _ChooseCatgoryState extends State<ChooseCatgory> {
             SizedBox(
               height: _height / 22,
             ),
-            GestureDetector(
+            CommonButton(
+              height: 40,
+              width: _width / 1.2,
+              color: ColorConstant.primary_color,
+              child: Center(
+                  child: Text(
+                "Register Now",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: 'outfit',
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500),
+              )),
+              radius: 10,
               onTap: () async {
                 if (_images.any((element) => element['isselected'] == true)) {
                   String storImageData = _images
                       .firstWhere(
                           (element) => element['isselected'] == true)['value']
                       .toString();
-                  final SharedPreferences prefs =
-                      await SharedPreferences.getInstance();
-                  prefs.setBool(
-                      SharedPreferencesCommenEntity
-                          .navigationrouteChosseCatgory,
-                      true);
-                  print("check image data -${storImageData}");
-                  prefs.setString(
-                      SharedPreferencesCommenEntity
-                          .navigationrouteChosseCatgorySelctedData,
-                      storImageData);
-                  Navigator.push(
+                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) =>
@@ -200,30 +181,8 @@ class _ChooseCatgoryState extends State<ChooseCatgory> {
                       duration: 2,
                       backgroundColor: ColorConstant.primary_color);
                 }
-                /*  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => PaymentAndChargeScreen(),
-                    )); */
               },
-              child: Container(
-                height: 40,
-                width: _width / 1.2,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: ColorConstant.primary_color,
-                ),
-                child: Center(
-                    child: Text(
-                  "Register Now",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'outfit',
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500),
-                )),
-              ),
-            )
+            ),
           ],
         ),
       ),

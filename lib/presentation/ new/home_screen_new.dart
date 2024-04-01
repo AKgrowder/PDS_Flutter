@@ -1285,6 +1285,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
     var Token = prefs.getString(PreferencesKey.loginJwt);
     var FCMToken = prefs.getString(PreferencesKey.fcmToken);
     User_ID = prefs.getString(PreferencesKey.loginUserID);
+    print("------------------------------------------------------${User_ID}");
     User_Name = prefs.getString(PreferencesKey.ProfileName);
     User_Module = prefs.getString(PreferencesKey.module);
     uuid = prefs.getString(PreferencesKey.loginUserID);
@@ -3527,6 +3528,9 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                   ? GestureDetector(
                                                                                       key: buttonKey,
                                                                                       onTap: () {
+                                                                                        print("condison -${User_ID}");
+                                                                                        print("condison1 -${AllGuestPostRoomData?.object?.content?[index].userUid}");
+
                                                                                         showPopupMenu(context, index, buttonKey);
                                                                                       },
                                                                                       /*  onTapDown:
@@ -5335,6 +5339,9 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                             ? GestureDetector(
                                                                                 key: buttonKey,
                                                                                 onTap: () {
+                                                                                  print("check -${User_ID}");
+                                                                                  print("check1 -${AllGuestPostRoomData?.object?.content?[index].userUid}");
+
                                                                                   showPopupMenu(context, index, buttonKey);
                                                                                 },
                                                                                 /*  onTapDown:

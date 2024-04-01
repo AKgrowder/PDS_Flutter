@@ -29,559 +29,604 @@ class _MPProductStatedetailsScreen extends State<MPProductdetailsScreen> {
   var userRating;
   double? rateStar = 5.0;
   int _number = 0;
+  String _selectedItem = 'Pendding';
 
   @override
   Widget build(BuildContext context) {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          "PRODUCT",
-          style: TextStyle(
-            fontFamily: 'outfit',
-            fontWeight: FontWeight.w600,
-            fontSize: 20,
-            color: Colors.black,
-          ),
-        ),
-        leading: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Container(
-            height: 40,
-            width: 40,
-            decoration: BoxDecoration(
-                color: ColorConstant.primary_color,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(5),
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          flexibleSpace: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 5,
+              ),
+              Icon(
+                Icons.arrow_back,
+                color: Colors.black,
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Text(
+                "Order Management",
+                style: TextStyle(
+                  fontFamily: 'outfit',
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20,
+                  color: Colors.black,
                 ),
-                border: Border.all(
-                  color: ColorConstant.primary_color,
-                )),
-            child: Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-            ),
-          ),
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      //--------------------------------------------------------------------Product Selaction---------------------------------------------------------------
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.only(left: 25.0, right: 25),
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            SizedBox(
-              height: 20,
-            ),
-            Row(
-              children: [
-                Text(
-                  "Home/ Boxes/ Tuck in boxes/",
-                  style: TextStyle(
-                    fontFamily: 'outfit',
-                    color: Colors.grey,
+              ),
+              Spacer(),
+              Padding(
+                padding: const EdgeInsets.only(top: 0, left: 5, right: 5),
+                child: Container(
+                  width: _width / 2.4,
+                  decoration: BoxDecoration(
+                      border: Border.all(color: ColorConstant.primary_color),
+                      borderRadius: BorderRadius.circular(5)),
+                  child: DropdownButtonFormField<String>(
+                    decoration: InputDecoration(
+                        border:
+                            UnderlineInputBorder(borderSide: BorderSide.none)),
+                    value: _selectedItem,
+                    icon: Icon(Icons.keyboard_arrow_down,
+                        color: ColorConstant.primary_color, size: 30),
+                    style: TextStyle(color: ColorConstant.primary_color),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        _selectedItem = newValue!;
+                      });
+                    },
+                    items: <String>[
+                      'Pendding',
+                      'Partially Accepted',
+                      'Payment Awaited',
+                      'Ready To Dispatch'
+                    ].map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 10.0),
+                          child: Text(
+                            value,
+                            style: TextStyle(
+                              fontFamily: 'outfit',
+                              fontWeight: FontWeight.w600,
+                              fontSize: 15,
+                              color: ColorConstant.primary_color,
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(growable: true),
                   ),
                 ),
-                Text(
-                  "4cm x 5cm Tuck in Box",
-                  style: TextStyle(
+              ),
+            ],
+          ),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+        ),
+        //--------------------------------------------------------------------Product Selaction---------------------------------------------------------------
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.only(left: 25.0, right: 25),
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                children: [
+                  Text(
+                    "Home/ Boxes/ Tuck in boxes/",
+                    style: TextStyle(
                       fontFamily: 'outfit',
-                      color: ColorConstant.primary_color,
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Paper Sheets",
-                      style: TextStyle(
-                          fontFamily: 'outfit',
-                          fontSize: 20,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w600),
+                      color: Colors.grey,
                     ),
-                    Row(
-                      children: [
-                        Text(
-                          "₹990",
+                  ),
+                  Text(
+                    "4cm x 5cm Tuck in Box",
+                    style: TextStyle(
+                        fontFamily: 'outfit',
+                        color: ColorConstant.primary_color,
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Paper Sheets",
+                        style: TextStyle(
+                            fontFamily: 'outfit',
+                            fontSize: 20,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w600),
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            "₹990",
+                            style: TextStyle(
+                                fontFamily: 'outfit',
+                                fontSize: 25,
+                                color: ColorConstant.primary_color,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          Text(
+                            "₹2400",
+                            style: TextStyle(
+                                fontFamily: 'outfit',
+                                fontSize: 20,
+                                decoration: TextDecoration.lineThrough,
+                                color: Colors.grey,
+                                fontWeight: FontWeight.w400),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      if (isSaved) {
+                        setState(() {
+                          isSaved = false;
+                        });
+                      } else {
+                        setState(() {
+                          isSaved = true;
+                        });
+                      }
+                    },
+                    child: isSaved
+                        ? Container(
+                            height: 35,
+                            child: CustomImageView(
+                              svgPath: ImageConstant.mpsaveimage,
+                            ),
+                          )
+                        : Container(
+                            height: 35,
+                            child: CustomImageView(
+                              svgPath: ImageConstant.mpproductunsaveimage,
+                            ),
+                          ),
+                  )
+                ],
+              ),
+              Row(
+                children: [
+                  RatingBar.builder(
+                    initialRating: userRating != null ? userRating : 5,
+                    minRating: 1,
+                    direction: Axis.horizontal,
+                    allowHalfRating: true,
+                    itemSize: 15,
+                    itemCount: 5,
+                    itemPadding: EdgeInsets.only(left: 1, right: 1),
+                    itemBuilder: (context, _) => Icon(
+                      Icons.star,
+                      color: Color(0xFFFFC41F),
+                    ),
+                    onRatingUpdate: (rating) {
+                      rateStar = rating;
+                      print(rating);
+                    },
+                  ),
+                  Text(
+                    "4.6 / 5.0 (556)",
+                    style: TextStyle(
+                        fontFamily: 'outfit', fontWeight: FontWeight.w300),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        if (_number > 0) {
+                          _number--;
+                        }
+                      });
+                    },
+                    child: Container(
+                      height: 40,
+                      width: 40,
+                      decoration: BoxDecoration(
+                          color: Colors.grey.shade200,
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                      child: Center(
+                          child: Icon(
+                        Icons.remove,
+                        color: Colors.grey,
+                      )),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Container(
+                    height: 40,
+                    width: 80,
+                    decoration: BoxDecoration(
+                        color: Colors.grey.shade200,
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                    child: Center(
+                        child: Text(
+                      "${_number}",
+                      style: TextStyle(color: Colors.grey, fontSize: 18),
+                    )),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _number++;
+                      });
+                    },
+                    child: Container(
+                      height: 40,
+                      width: 40,
+                      decoration: BoxDecoration(
+                          color: Colors.grey.shade200,
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                      child: Center(
+                          child: Icon(
+                        Icons.add,
+                        color: Colors.grey,
+                      )),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  Container(
+                    height: 45,
+                    width: _width / 3,
+                    decoration: BoxDecoration(
+                        color: ColorConstant.primary_color,
+                        border: Border.all(color: ColorConstant.primary_color),
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
+                    child: Card(
+                      color: ColorConstant.primary_color,
+                      child: Center(
+                        child: Text(
+                          "Add To Cart",
                           style: TextStyle(
                               fontFamily: 'outfit',
-                              fontSize: 25,
-                              color: ColorConstant.primary_color,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Container(
+                height: 80,
+                decoration: BoxDecoration(
+                  color: ColorConstant.primaryLight_color,
+                ),
+                //------------------------------------------------------------------------------Seller Information------------------------------------------------------------
+                child: Column(children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Seller Name",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 18,
+                            fontFamily: 'outfit',
+                          ),
+                        ),
+                        Text(
+                          "Min.Order",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 18,
+                            fontFamily: 'outfit',
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "InPacking",
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                              fontFamily: 'outfit',
                               fontWeight: FontWeight.w600),
                         ),
                         Text(
-                          "₹2400",
+                          "100 pic",
                           style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
                               fontFamily: 'outfit',
-                              fontSize: 20,
-                              decoration: TextDecoration.lineThrough,
-                              color: Colors.grey,
-                              fontWeight: FontWeight.w400),
+                              fontWeight: FontWeight.w600),
                         ),
                       ],
                     ),
-                  ],
-                ),
-                GestureDetector(
-                  onTap: () {
-                    if (isSaved) {
-                      setState(() {
-                        isSaved = false;
-                      });
-                    } else {
-                      setState(() {
-                        isSaved = true;
-                      });
-                    }
-                  },
-                  child: isSaved
-                      ? Container(
-                          height: 35,
-                          child: CustomImageView(
-                            svgPath: ImageConstant.mpsaveimage,
-                          ),
-                        )
-                      : Container(
-                          height: 35,
-                          child: CustomImageView(
-                            svgPath: ImageConstant.mpproductunsaveimage,
-                          ),
-                        ),
-                )
-              ],
-            ),
-            Row(
-              children: [
-                RatingBar.builder(
-                  initialRating: userRating != null ? userRating : 5,
-                  minRating: 1,
-                  direction: Axis.horizontal,
-                  allowHalfRating: true,
-                  itemSize: 15,
-                  itemCount: 5,
-                  itemPadding: EdgeInsets.only(left: 1, right: 1),
-                  itemBuilder: (context, _) => Icon(
-                    Icons.star,
-                    color: Color(0xFFFFC41F),
                   ),
-                  onRatingUpdate: (rating) {
-                    rateStar = rating;
-                    print(rating);
-                  },
-                ),
-                Text(
-                  "4.6 / 5.0 (556)",
-                  style: TextStyle(
-                      fontFamily: 'outfit', fontWeight: FontWeight.w300),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      if (_number > 0) {
-                        _number--;
-                      }
-                    });
-                  },
-                  child: Container(
-                    height: 40,
-                    width: 40,
-                    decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                    child: Center(
-                        child: Icon(
-                      Icons.remove,
-                      color: Colors.grey,
-                    )),
-                  ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Container(
-                  height: 40,
-                  width: 80,
-                  decoration: BoxDecoration(
-                      color: Colors.grey.shade200,
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
-                  child: Center(
-                      child: Text(
-                    "${_number}",
-                    style: TextStyle(color: Colors.grey, fontSize: 18),
-                  )),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _number++;
-                    });
-                  },
-                  child: Container(
-                    height: 40,
-                    width: 40,
-                    decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                    child: Center(
-                        child: Icon(
-                      Icons.add,
-                      color: Colors.grey,
-                    )),
-                  ),
-                ),
-                SizedBox(
-                  width: 20,
-                ),
-                Container(
-                  height: 45,
-                  width: _width / 3,
-                  decoration: BoxDecoration(
-                      color: ColorConstant.primary_color,
-                      border: Border.all(color: ColorConstant.primary_color),
-                      borderRadius: BorderRadius.all(Radius.circular(5))),
-                  child: Card(
-                    color: ColorConstant.primary_color,
-                    child: Center(
-                      child: Text(
-                        "Add To Cart",
-                        style: TextStyle(
-                            fontFamily: 'outfit',
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Container(
-              height: 80,
-              decoration: BoxDecoration(
-                color: ColorConstant.primaryLight_color,
+                ]),
               ),
-              //------------------------------------------------------------------------------Seller Information------------------------------------------------------------
-              child: Column(children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Seller Name",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 18,
-                          fontFamily: 'outfit',
-                        ),
-                      ),
-                      Text(
-                        "Min.Order",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 18,
-                          fontFamily: 'outfit',
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "InPacking",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 18,
-                            fontFamily: 'outfit',
-                            fontWeight: FontWeight.w600),
-                      ),
-                      Text(
-                        "100 pic",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 18,
-                            fontFamily: 'outfit',
-                            fontWeight: FontWeight.w600),
-                      ),
-                    ],
-                  ),
-                ),
-              ]),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-
-            //------------------------------------------------------------------------------OverView Section--------------------------------------------------------------
-            Overviewlist(_width),
-            SizedBox(
-              height: 10,
-            ),
-            //------------------------------------------------------------------------------Product details----------------------------------------------------------------
-            Container(
-              // color: Colors.amber,
-              child: Card(
-                shadowColor: Colors.black,
-                child: ExpansionTile(
-                  expandedAlignment: Alignment.topLeft,
-                  iconColor: Colors.black,
-                  title: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Product Details",
-                        style: TextStyle(
-                            fontFamily: 'outfit',
-                            fontSize: 18,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Divider(
-                        color: ColorConstant.primary_color,
-                        thickness: 2,
-                        endIndent: 150,
-                      )
-                    ],
-                  ),
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ReadMoreText(
-                        'Est voluptate maxime quaerat rerum et Rerum similique ut doloremque aspernatur debitis ab nisiPorro et dolorum sequi',
-                        trimLines: 2,
-                        colorClickableText: ColorConstant.primary_color,
-                        trimMode: TrimMode.Line,
-                        trimCollapsedText: 'Read More',
-                        trimExpandedText: ' Read Less',
-                        style: TextStyle(
-                            fontFamily: 'outfit',
-                            fontSize: 13,
-                            color: Colors.grey),
-                        /* AppStyle.txtOutfitRegular13.copyWith(
-                              fontSize: 14, color: ColorConstant.gray500), */
-                        moreStyle: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: ColorConstant.primary_color),
-                      ),
-                    ),
-                  ],
-                ),
+              SizedBox(
+                height: 20,
               ),
-            ),
-//-----------------------------------------------------------------------------Expected Days of Delivery------------------------------------------------
 
-            Container(
-              // color: Colors.amber,
-              child: Card(
-                shadowColor: Colors.black,
-                child: ExpansionTile(
-                  expandedAlignment: Alignment.topLeft,
-                  iconColor: Colors.black,
-                  title: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Expected Days of Delivery",
-                        style: TextStyle(
-                            fontFamily: 'outfit',
-                            fontSize: 18,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Divider(
-                        color: ColorConstant.primary_color,
-                        thickness: 2,
-                        endIndent: 60,
-                      )
-                    ],
-                  ),
-                  children: [
-                    Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          "5 days",
+              //------------------------------------------------------------------------------OverView Section--------------------------------------------------------------
+              Overviewlist(_width),
+              SizedBox(
+                height: 10,
+              ),
+              //------------------------------------------------------------------------------Product details----------------------------------------------------------------
+              Container(
+                // color: Colors.amber,
+                child: Card(
+                  shadowColor: Colors.black,
+                  child: ExpansionTile(
+                    expandedAlignment: Alignment.topLeft,
+                    iconColor: Colors.black,
+                    title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Product Details",
                           style: TextStyle(
                               fontFamily: 'outfit',
-                              fontSize: 15,
-                              color: Colors.grey,
-                              fontWeight: FontWeight.w400),
-                        )),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-//------------------------------------------------------------------------------Additional Info--------------------------------------------------------------------
-            Container(
-              // color: Colors.amber,
-              child: Card(
-                shadowColor: Colors.black,
-                child: ExpansionTile(
-                  expandedAlignment: Alignment.topLeft,
-                  iconColor: Colors.black,
-                  title: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                              fontSize: 18,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Divider(
+                          color: ColorConstant.primary_color,
+                          thickness: 2,
+                          endIndent: 150,
+                        )
+                      ],
+                    ),
                     children: [
-                      Text(
-                        "Additional Info",
-                        style: TextStyle(
-                            fontFamily: 'outfit',
-                            fontSize: 18,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ReadMoreText(
+                          'Est voluptate maxime quaerat rerum et Rerum similique ut doloremque aspernatur debitis ab nisiPorro et dolorum sequi',
+                          trimLines: 2,
+                          colorClickableText: ColorConstant.primary_color,
+                          trimMode: TrimMode.Line,
+                          trimCollapsedText: 'Read More',
+                          trimExpandedText: ' Read Less',
+                          style: TextStyle(
+                              fontFamily: 'outfit',
+                              fontSize: 13,
+                              color: Colors.grey),
+                          /* AppStyle.txtOutfitRegular13.copyWith(
+                                fontSize: 14, color: ColorConstant.gray500), */
+                          moreStyle: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: ColorConstant.primary_color),
+                        ),
                       ),
-                      Divider(
-                        color: ColorConstant.primary_color,
-                        thickness: 2,
-                        endIndent: 160,
-                      )
                     ],
                   ),
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Additionalinfolist(),
-                    ),
-                  ],
                 ),
               ),
-            ),
-//----------------------------------------------------------------------------- Replacement  Policy Section--------------------------------------------------
-            Container(
-              // color: Colors.amber,
-              child: Card(
-                shadowColor: Colors.black,
-                child: ExpansionTile(
-                  expandedAlignment: Alignment.topLeft,
-                  iconColor: Colors.black,
-                  title: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Replacement  Policy",
-                        style: TextStyle(
-                            fontFamily: 'outfit',
-                            fontSize: 18,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Divider(
-                        color: ColorConstant.primary_color,
-                        thickness: 2,
-                        endIndent: 120,
-                      )
-                    ],
-                  ),
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+              //-----------------------------------------------------------------------------Expected Days of Delivery------------------------------------------------
 
-//-----------------------------------------------------------------------------Return Policy-----------------------------------------------------------------
-
-            Container(
-              // color: Colors.amber,
-              child: Card(
-                shadowColor: Colors.black,
-                child: ExpansionTile(
-                  expandedAlignment: Alignment.topLeft,
-                  iconColor: Colors.black,
-                  title: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+              Container(
+                // color: Colors.amber,
+                child: Card(
+                  shadowColor: Colors.black,
+                  child: ExpansionTile(
+                    expandedAlignment: Alignment.topLeft,
+                    iconColor: Colors.black,
+                    title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Expected Days of Delivery",
+                          style: TextStyle(
+                              fontFamily: 'outfit',
+                              fontSize: 18,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Divider(
+                          color: ColorConstant.primary_color,
+                          thickness: 2,
+                          endIndent: 60,
+                        )
+                      ],
+                    ),
                     children: [
-                      Text(
-                        "Return Policy",
-                        style: TextStyle(
-                            fontFamily: 'outfit',
-                            fontSize: 18,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Divider(
-                        color: ColorConstant.primary_color,
-                        thickness: 2,
-                        endIndent: 170,
-                      )
+                      Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "5 days",
+                            style: TextStyle(
+                                fontFamily: 'outfit',
+                                fontSize: 15,
+                                color: Colors.grey,
+                                fontWeight: FontWeight.w400),
+                          )),
                     ],
                   ),
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                    ),
-                  ],
                 ),
               ),
-            ),
-//-----------------------------------------------------------------------------Related Products-----------------------------------------------------------------
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Related Products",
-                  style: TextStyle(
-                      fontFamily: 'outfit',
-                      fontSize: 18,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold),
+              SizedBox(
+                height: 10,
+              ),
+              //------------------------------------------------------------------------------Additional Info--------------------------------------------------------------------
+              Container(
+                // color: Colors.amber,
+                child: Card(
+                  shadowColor: Colors.black,
+                  child: ExpansionTile(
+                    expandedAlignment: Alignment.topLeft,
+                    iconColor: Colors.black,
+                    title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Additional Info",
+                          style: TextStyle(
+                              fontFamily: 'outfit',
+                              fontSize: 18,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Divider(
+                          color: ColorConstant.primary_color,
+                          thickness: 2,
+                          endIndent: 160,
+                        )
+                      ],
+                    ),
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Additionalinfolist(),
+                      ),
+                    ],
+                  ),
                 ),
-                Text(
-                  "View all",
-                  style: TextStyle(
-                      fontFamily: 'outfit',
-                      fontSize: 15,
-                      color: ColorConstant.primary_color,
-                      fontWeight: FontWeight.bold),
+              ),
+              //----------------------------------------------------------------------------- Replacement  Policy Section--------------------------------------------------
+              Container(
+                // color: Colors.amber,
+                child: Card(
+                  shadowColor: Colors.black,
+                  child: ExpansionTile(
+                    expandedAlignment: Alignment.topLeft,
+                    iconColor: Colors.black,
+                    title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Replacement  Policy",
+                          style: TextStyle(
+                              fontFamily: 'outfit',
+                              fontSize: 18,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Divider(
+                          color: ColorConstant.primary_color,
+                          thickness: 2,
+                          endIndent: 120,
+                        )
+                      ],
+                    ),
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                      ),
+                    ],
+                  ),
                 ),
-              ],
-            ),
-            ReletedProducts(_width, _height),
-          ]),
+              ),
+
+              //-----------------------------------------------------------------------------Return Policy-----------------------------------------------------------------
+
+              Container(
+                // color: Colors.amber,
+                child: Card(
+                  shadowColor: Colors.black,
+                  child: ExpansionTile(
+                    expandedAlignment: Alignment.topLeft,
+                    iconColor: Colors.black,
+                    title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Return Policy",
+                          style: TextStyle(
+                              fontFamily: 'outfit',
+                              fontSize: 18,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Divider(
+                          color: ColorConstant.primary_color,
+                          thickness: 2,
+                          endIndent: 170,
+                        )
+                      ],
+                    ),
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              //-----------------------------------------------------------------------------Related Products-----------------------------------------------------------------
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Related Products",
+                    style: TextStyle(
+                        fontFamily: 'outfit',
+                        fontSize: 18,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    "View all",
+                    style: TextStyle(
+                        fontFamily: 'outfit',
+                        fontSize: 15,
+                        color: ColorConstant.primary_color,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              ReletedProducts(_width, _height),
+            ]),
+          ),
+          //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         ),
-//----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
       ),
     );
   }

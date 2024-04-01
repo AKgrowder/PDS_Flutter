@@ -15,6 +15,7 @@ import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/dialogs/assigh_adminn_dilog.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
+import 'package:pds/presentation/room_members/exit_room_dailog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/utils/image_constant.dart';
@@ -75,6 +76,8 @@ Map userData = {
 FatchAllMembersModel? _data;
 String? uuID;
 String? User_ID;
+int? selectedIndex;
+bool? exitDailog;
 
 class _RoomMembersScreenState extends State<RoomMembersScreen> {
   @override
@@ -96,783 +99,341 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
-    return Scaffold(
-        backgroundColor: theme.colorScheme.onPrimary,
-        appBar: AppBar(
-          leading: GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Icon(
-              Icons.arrow_back,
-              color: Colors.black,
-            ),
-          ),
-          centerTitle: true,
-          elevation: 0,
-          backgroundColor: theme.colorScheme.onPrimary,
-          title: Text(
-            "Room Members",
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-                fontFamily: "outfit",
-                fontSize: 20),
-          ),
-        ),
-        body: SingleChildScrollView(
-            child: BlocConsumer<FatchAllMembersCubit, FatchAllMembersState>(
-                listener: (context, state) {
-          if (state is FatchAllMembersErrorState) {
-            SnackBar snackBar = SnackBar(
-              content: Text(state.error),
-              backgroundColor: ColorConstant.primary_color,
-            );
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          }
-
-          if (state is FatchAllMembersLoadingState) {
-            Center(
-              child: Container(
-                margin: EdgeInsets.only(bottom: 100),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: Image.asset(ImageConstant.loader,
-                      fit: BoxFit.cover, height: 100.0, width: 100),
+    return Stack(
+      children: [
+        Scaffold(
+            backgroundColor: theme.colorScheme.onPrimary,
+            appBar: AppBar(
+              leading: GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Icon(
+                  Icons.arrow_back,
+                  color: Colors.black,
                 ),
               ),
-            );
-          }
-          if (state is FatchAllMembersLoadedState) {
-            _data = state.FatchAllMembersData;
-          }
-          if (state is RoomExistsLoadedState) {
-            SnackBar snackBar = SnackBar(
-              content: Text(state.roomExistsModel.object.toString()),
-              backgroundColor: ColorConstant.primary_color,
-            );
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          }
-        }, builder: (context, state) {
-          if (state is FatchAllMembersLoadedState) {
-            _data = state.FatchAllMembersData;
+              centerTitle: true,
+              elevation: 0,
+              backgroundColor: theme.colorScheme.onPrimary,
+              title: Text(
+                "Room Members",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                    fontFamily: "outfit",
+                    fontSize: 20),
+              ),
+            ),
+            body: SingleChildScrollView(
+                child: BlocConsumer<FatchAllMembersCubit, FatchAllMembersState>(
+                    listener: (context, state) {
+              if (state is FatchAllMembersErrorState) {
+                SnackBar snackBar = SnackBar(
+                  content: Text(state.error),
+                  backgroundColor: ColorConstant.primary_color,
+                );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }
 
-            return Column(
-              children: [
+              if (state is FatchAllMembersLoadingState) {
                 Center(
                   child: Container(
-                    height: _height / 8,
-                    width: _width / 1.2,
-                    decoration: BoxDecoration(
-                      color: ColorConstant.primaryLight_color,
-                      borderRadius: BorderRadius.circular(10),
+                    margin: EdgeInsets.only(bottom: 100),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Image.asset(ImageConstant.loader,
+                          fit: BoxFit.cover, height: 100.0, width: 100),
                     ),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  height: 40,
-                                  width: _width / 1.85,
-                                  // color: Colors.amber,
-                                  child: Text(
-                                    "${widget.roomname}", maxLines: 2,
-                                    // "Room Name",
-                                    style: TextStyle(
-                                        overflow: TextOverflow.ellipsis,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black,
-                                        fontFamily: "outfit",
-                                        fontSize: 15),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
-                            child: Container(
-                              height: 40,
-                              width: _width,
-                              // color: Colors.amber,
-                              child: Text(
-                                "${widget.roomdescription}",
-                                maxLines: 2,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    overflow: TextOverflow.ellipsis,
-                                    color: Colors.black,
-                                    fontFamily: "outfit",
-                                    fontSize: 13),
-                              ),
-                            ),
-                          ),
-                        ]),
                   ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                ListView.builder(
-                  physics: BouncingScrollPhysics(),
-                  itemCount: _data?.object?.roomMemberOutputDTOList?.length,
-                  // itemCount: 2,
+                );
+              }
+              if (state is FatchAllMembersLoadedState) {
+                _data = state.FatchAllMembersData;
+              }
+              if (state is RoomExistsLoadedState) {
+                SnackBar snackBar = SnackBar(
+                  content: Text(state.roomExistsModel.object.toString()),
+                  backgroundColor: ColorConstant.primary_color,
+                );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }
+            }, builder: (context, state) {
+              if (state is FatchAllMembersLoadedState) {
+                _data = state.FatchAllMembersData;
 
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    print(
-                        'axfhsdfh-${_data?.object?.roomMemberOutputDTOList?.length}');
-                    return Padding(
-                      padding:
-                          const EdgeInsets.only(left: 35, right: 35, top: 20),
+                return Column(
+                  children: [
+                    Center(
                       child: Container(
-                        height: _height / 12,
+                        height: _height / 8,
                         width: _width / 1.2,
                         decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
+                          color: ColorConstant.primaryLight_color,
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              GestureDetector(
-                                onTap: () {
-                                  bool? isBlock = _data?.object?.blockedUsers
-                                      ?.contains(_data
-                                          ?.object
-                                          ?.roomMemberOutputDTOList?[index]
-                                          .userUuid);
-
-                                  print("this i want to check-${isBlock}");
-                                  if (isBlock == true) {
-                                    SnackBar snackBar = SnackBar(
-                                      content: Text('User Blocked.'),
-                                      backgroundColor:
-                                          ColorConstant.primary_color,
-                                    );
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(snackBar);
-                                  } else {
-                                    Navigator.push(context,
-                                        MaterialPageRoute(builder: (context) {
-                                      return ProfileScreen(
-                                          User_ID:
-                                              "${_data?.object?.roomMemberOutputDTOList?[index].userUuid}",
-                                          isFollowing: "");
-                                    }));
-                                  }
-                                },
-                                child: _data
-                                            ?.object
-                                            ?.roomMemberOutputDTOList?[index]
-                                            .userProfilePic
-                                            ?.isNotEmpty ??
-                                        false
-                                    ? Stack(
-                                        alignment: Alignment.bottomCenter,
-                                        children: [
-                                          CustomImageView(
-                                            url:
-                                                "${_data?.object?.roomMemberOutputDTOList?[index].userProfilePic}",
-                                            height: 50,
-                                            radius: BorderRadius.circular(25),
-                                            width: 50,
-                                            fit: BoxFit.fill,
-                                          ),
-                                          _data
-                                                      ?.object
-                                                      ?.roomMemberOutputDTOList?[
-                                                          index]
-                                                      .isExpert ==
-                                                  true
-                                              ? Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 30.0),
-                                                  child: Image.asset(
-                                                    ImageConstant.Star,
-                                                    height: 18,
-                                                  ),
-                                                )
-                                              : SizedBox()
-                                        ],
-                                      )
-                                    : Stack(
-                                        alignment: Alignment.bottomCenter,
-                                        children: [
-                                          CustomImageView(
-                                            imagePath: ImageConstant.tomcruse,
-                                            height: 50,
-                                            radius: BorderRadius.circular(25),
-                                            width: 50,
-                                            fit: BoxFit.fill,
-                                          ),
-                                          _data
-                                                      ?.object
-                                                      ?.roomMemberOutputDTOList?[
-                                                          index]
-                                                      .isExpert ==
-                                                  true
-                                              ? Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 30.0),
-                                                  child: Image.asset(
-                                                    ImageConstant.Star,
-                                                    height: 18,
-                                                  ),
-                                                )
-                                              : SizedBox()
-                                        ],
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      height: 40,
+                                      width: _width / 1.85,
+                                      // color: Colors.amber,
+                                      child: Text(
+                                        "${widget.roomname}", maxLines: 2,
+                                        // "Room Name",
+                                        style: TextStyle(
+                                            overflow: TextOverflow.ellipsis,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
+                                            fontFamily: "outfit",
+                                            fontSize: 15),
                                       ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  bool? isBlock = _data?.object?.blockedUsers
-                                      ?.contains(_data
-                                          ?.object
-                                          ?.roomMemberOutputDTOList?[index]
-                                          .userUuid);
-
-                                  print("this i want to check-${isBlock}");
-                                  if (isBlock == true) {
-                                    SnackBar snackBar = SnackBar(
-                                      content: Text('User Blocked.'),
-                                      backgroundColor:
-                                          ColorConstant.primary_color,
-                                    );
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(snackBar);
-                                  } else {
-                                    Navigator.push(context,
-                                        MaterialPageRoute(builder: (context) {
-                                      return ProfileScreen(
-                                          User_ID:
-                                              "${_data?.object?.roomMemberOutputDTOList?[index].userUuid}",
-                                          isFollowing: "");
-                                    }));
-                                  }
-                                },
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
                                 child: Container(
+                                  height: 40,
+                                  width: _width,
+                                  // color: Colors.amber,
                                   child: Text(
-                                    "${_data?.object?.roomMemberOutputDTOList?[index].fullName ?? ""}",
+                                    "${widget.roomdescription}",
+                                    maxLines: 2,
                                     style: TextStyle(
-                                        fontWeight: FontWeight.bold,
+                                        fontWeight: FontWeight.w400,
+                                        overflow: TextOverflow.ellipsis,
                                         color: Colors.black,
                                         fontFamily: "outfit",
-                                        fontSize: 15),
+                                        fontSize: 13),
                                   ),
                                 ),
                               ),
-                              // _data?.object?[index].isExpert == true
-                              //     ? Container(
-                              //         color:ColorConstant.primary_color,
-                              //         height: 20,
-                              //         width: 20,
-                              //       )
-                              //     : SizedBox(),
-                              Spacer(),
-                              _data?.object?.roomMemberOutputDTOList?[index]
-                                          .isAdmin ==
-                                      true
-                                  ? Container(
-                                      height: 50,
-                                      child: Column(
-                                        children: [
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                                bottom: 3, left: 50),
-                                            child: Align(
-                                                alignment: Alignment.center,
-                                                child: Text(
-                                                  "Admin",
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: ColorConstant
-                                                        .primary_color,
-                                                    // fontFamily: "outfit",
-                                                    // fontSize: 15,
-                                                  ),
-                                                )),
-                                          ),
-                                          User_ID ==
-                                                  _data
-                                                      ?.object
-                                                      ?.roomMemberOutputDTOList?[
-                                                          index]
-                                                      .userUuid
-                                              ? GestureDetector(
-                                                  onTap: () {
-                                                    if ((_data
-                                                                ?.object
-                                                                ?.roomMemberOutputDTOList
-                                                                ?.length ??
-                                                            0) <=
-                                                        1) {
-                                                      showDialog(
-                                                          context: context,
-                                                          builder: (context) {
-                                                            return Center(
-                                                              child: Container(
-                                                                color: Colors
-                                                                    .white,
-                                                                margin: EdgeInsets
-                                                                    .only(
-                                                                        left:
-                                                                            20,
-                                                                        right:
-                                                                            20),
-                                                                height: 200,
-                                                                width: _width,
-                                                                // color: Colors.amber,
-                                                                child: BlocConsumer<
-                                                                    GetAllPrivateRoomCubit,
-                                                                    GetAllPrivateRoomState>(
-                                                                  listener:
-                                                                      (context,
-                                                                          state) {
-                                                                    if (state
-                                                                        is DeleteRoomLoadedState) {
-                                                                      SnackBar
-                                                                          snackBar =
-                                                                          SnackBar(
-                                                                        content:
-                                                                            Text(state.DeleteRoom.object ??
-                                                                                ""),
-                                                                        backgroundColor:
-                                                                            ColorConstant.primary_color,
-                                                                      );
-                                                                      ScaffoldMessenger.of(
-                                                                              context)
-                                                                          .showSnackBar(
-                                                                              snackBar);
+                            ]),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    ListView.builder(
+                      physics: BouncingScrollPhysics(),
+                      itemCount: _data?.object?.roomMemberOutputDTOList?.length,
+                      // itemCount: 2,
 
-                                                                      Navigator.pop(
-                                                                          context);
-                                                                    }
-                                                                  },
-                                                                  builder:
-                                                                      (context,
-                                                                          state) {
-                                                                    return Column(
-                                                                      children: [
-                                                                        SizedBox(
-                                                                          height:
-                                                                              10,
-                                                                        ),
-                                                                        Text(
-                                                                          "Exit Room",
-                                                                          style:
-                                                                              TextStyle(
-                                                                            fontFamily:
-                                                                                'outfit',
-                                                                            fontSize:
-                                                                                20,
-                                                                            color:
-                                                                                Colors.black,
-                                                                            fontWeight:
-                                                                                FontWeight.bold,
-                                                                          ),
-                                                                        ),
-                                                                        Divider(
-                                                                          color:
-                                                                              Colors.grey,
-                                                                        ),
-                                                                        SizedBox(
-                                                                          height:
-                                                                              5,
-                                                                        ),
-                                                                        Center(
-                                                                            child:
-                                                                                Text(
-                                                                          "Are You Sure You Want To Exit This Room",
-                                                                          style:
-                                                                              TextStyle(
-                                                                            fontFamily:
-                                                                                'outfit',
-                                                                            fontSize:
-                                                                                15,
-                                                                            color:
-                                                                                Colors.black,
-                                                                            fontWeight:
-                                                                                FontWeight.w500,
-                                                                          ),
-                                                                        )),
-                                                                        SizedBox(
-                                                                          height:
-                                                                              50,
-                                                                        ),
-                                                                        Row(
-                                                                          mainAxisAlignment:
-                                                                              MainAxisAlignment.spaceEvenly,
-                                                                          children: [
-                                                                            GestureDetector(
-                                                                              onTap: () => Navigator.pop(context),
-                                                                              child: Container(
-                                                                                height: 43,
-                                                                                width: _width / 3.5,
-                                                                                decoration: BoxDecoration(color: Colors.transparent, border: Border.all(color: Colors.grey.shade400), borderRadius: BorderRadius.circular(10)),
-                                                                                child: Center(
-                                                                                    child: Text(
-                                                                                  "Cancel",
-                                                                                  style: TextStyle(
-                                                                                    fontFamily: 'outfit',
-                                                                                    fontSize: 15,
-                                                                                    color: ColorConstant.primary_color,
-                                                                                    fontWeight: FontWeight.w400,
-                                                                                  ),
-                                                                                )),
-                                                                              ),
-                                                                            ),
-                                                                            GestureDetector(
-                                                                              onTap: () {
-                                                                                BlocProvider.of<GetAllPrivateRoomCubit>(context).DeleteRoomm(widget.room_Id, 'Exit', context);
-
-                                                                                Navigator.pop(context);
-                                                                              },
-                                                                              child: Container(
-                                                                                height: 43,
-                                                                                width: _width / 3.5,
-                                                                                decoration: BoxDecoration(color: ColorConstant.primary_color, borderRadius: BorderRadius.circular(10)),
-                                                                                child: Center(
-                                                                                    child: Text(
-                                                                                  "Exit",
-                                                                                  style: TextStyle(
-                                                                                    fontFamily: 'outfit',
-                                                                                    fontSize: 15,
-                                                                                    color: Colors.white,
-                                                                                    fontWeight: FontWeight.w400,
-                                                                                  ),
-                                                                                )),
-                                                                              ),
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                      ],
-                                                                    );
-                                                                  },
-                                                                ),
-                                                              ),
-                                                            );
-                                                          });
-                                                    } else {
-                                                      if (widget
-                                                              .RoomOwnerCount >
-                                                          1) {
-                                                        showDialog(
-                                                            context: context,
-                                                            builder: (context) {
-                                                              return Center(
-                                                                child:
-                                                                    Container(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  margin: EdgeInsets
-                                                                      .only(
-                                                                          left:
-                                                                              20,
-                                                                          right:
-                                                                              20),
-                                                                  height: 200,
-                                                                  width: _width,
-                                                                  // color: Colors.amber,
-                                                                  child: BlocConsumer<
-                                                                      GetAllPrivateRoomCubit,
-                                                                      GetAllPrivateRoomState>(
-                                                                    listener:
-                                                                        (context,
-                                                                            state) {
-                                                                      if (state
-                                                                          is DeleteRoomLoadedState) {
-                                                                        SnackBar
-                                                                            snackBar =
-                                                                            SnackBar(
-                                                                          content:
-                                                                              Text(state.DeleteRoom.object ?? ""),
-                                                                          backgroundColor:
-                                                                              ColorConstant.primary_color,
-                                                                        );
-                                                                        ScaffoldMessenger.of(context)
-                                                                            .showSnackBar(snackBar);
-
-                                                                        Navigator.pop(
-                                                                            context);
-                                                                      }
-                                                                    },
-                                                                    builder:
-                                                                        (context,
-                                                                            state) {
-                                                                      return Column(
-                                                                        children: [
-                                                                          SizedBox(
-                                                                            height:
-                                                                                10,
-                                                                          ),
-                                                                          Text(
-                                                                            "Exit Room",
-                                                                            style:
-                                                                                TextStyle(
-                                                                              fontFamily: 'outfit',
-                                                                              fontSize: 20,
-                                                                              color: Colors.black,
-                                                                              fontWeight: FontWeight.bold,
-                                                                            ),
-                                                                          ),
-                                                                          Divider(
-                                                                            color:
-                                                                                Colors.grey,
-                                                                          ),
-                                                                          SizedBox(
-                                                                            height:
-                                                                                5,
-                                                                          ),
-                                                                          Center(
-                                                                              child: Text(
-                                                                            "Are You Sure You Want To Exit This Room",
-                                                                            style:
-                                                                                TextStyle(
-                                                                              fontFamily: 'outfit',
-                                                                              fontSize: 15,
-                                                                              color: Colors.black,
-                                                                              fontWeight: FontWeight.w500,
-                                                                            ),
-                                                                          )),
-                                                                          SizedBox(
-                                                                            height:
-                                                                                50,
-                                                                          ),
-                                                                          Row(
-                                                                            mainAxisAlignment:
-                                                                                MainAxisAlignment.spaceEvenly,
-                                                                            children: [
-                                                                              GestureDetector(
-                                                                                onTap: () => Navigator.pop(context),
-                                                                                child: Container(
-                                                                                  height: 43,
-                                                                                  width: _width / 3.5,
-                                                                                  decoration: BoxDecoration(color: Colors.transparent, border: Border.all(color: Colors.grey.shade400), borderRadius: BorderRadius.circular(10)),
-                                                                                  child: Center(
-                                                                                      child: Text(
-                                                                                    "Cancel",
-                                                                                    style: TextStyle(
-                                                                                      fontFamily: 'outfit',
-                                                                                      fontSize: 15,
-                                                                                      color: ColorConstant.primary_color,
-                                                                                      fontWeight: FontWeight.w400,
-                                                                                    ),
-                                                                                  )),
-                                                                                ),
-                                                                              ),
-                                                                              GestureDetector(
-                                                                                onTap: () {
-                                                                                  BlocProvider.of<GetAllPrivateRoomCubit>(context).DeleteRoomm(widget.room_Id, 'Exit', context);
-
-                                                                                  Navigator.pop(context);
-                                                                                },
-                                                                                child: Container(
-                                                                                  height: 43,
-                                                                                  width: _width / 3.5,
-                                                                                  decoration: BoxDecoration(color: ColorConstant.primary_color, borderRadius: BorderRadius.circular(10)),
-                                                                                  child: Center(
-                                                                                      child: Text(
-                                                                                    "Exit",
-                                                                                    style: TextStyle(
-                                                                                      fontFamily: 'outfit',
-                                                                                      fontSize: 15,
-                                                                                      color: Colors.white,
-                                                                                      fontWeight: FontWeight.w400,
-                                                                                    ),
-                                                                                  )),
-                                                                                ),
-                                                                              ),
-                                                                            ],
-                                                                          ),
-                                                                        ],
-                                                                      );
-                                                                    },
-                                                                  ),
-                                                                ),
-                                                              );
-                                                            });
-                                                      } else {
-                                                        showDialog(
-                                                            context: context,
-                                                            builder: (_) =>
-                                                                AssignAdminScreenn(
-                                                                  DeleteFlag:
-                                                                      true,
-                                                                  roomID: widget
-                                                                      .room_Id,
-                                                                  data: _data,
-                                                                  RoomOwnerCount:
-                                                                      widget
-                                                                          .RoomOwnerCount,
-                                                                ));
-                                                      }
-                                                    }
-                                                  },
-                                                  child: Container(
-                                                    height: 25,
-                                                    alignment: Alignment.center,
-                                                    width: 90,
-                                                    margin: EdgeInsets.only(
-                                                        bottom: 5),
-                                                    decoration: BoxDecoration(
-                                                        color: ColorConstant
-                                                            .primary_color,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(4)),
-                                                    child: Row(
-                                                      children: [
-                                                        Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  left: 5),
-                                                          child:
-                                                              CustomImageView(
-                                                            imagePath:
-                                                                ImageConstant
-                                                                    .delete,
-                                                            height: 18,
-                                                            color: Colors.white,
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          width: 5,
-                                                        ),
-                                                        Text(
-                                                          'Exit Room',
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  "outfit",
-                                                              fontSize: 12,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              color:
-                                                                  Colors.white),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ))
-                                              : Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 75),
-                                                  child: GestureDetector(
-                                                    onTapDown: (details) {
-                                                      print("yes i am jinal ");
-                                                      _showPopupMenu(
-                                                          index,
-                                                          details
-                                                              .globalPosition,
-                                                          context);
-                                                    },
-                                                    child: Container(
-                                                      height: 30,
-                                                      width: 30,
-                                                      color: Color.fromARGB(
-                                                          255, 255, 255, 255),
-                                                      child: Center(
-                                                        child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(5.0),
-                                                          child: Container(
-                                                            child:
-                                                                CustomImageView(
-                                                              imagePath:
-                                                                  ImageConstant
-                                                                      .popupimage,
-                                                              height: 20,
-                                                              fit: BoxFit.fill,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                )
-                                        ],
-                                      ),
-                                    )
-                                  : widget.CreateUserID !=
-                                          _data
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        print(
+                            'axfhsdfh-${_data?.object?.roomMemberOutputDTOList?.length}');
+                        return Padding(
+                          padding: const EdgeInsets.only(
+                              left: 35, right: 35, top: 20),
+                          child: Container(
+                            height: _height / 12,
+                            width: _width / 1.2,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      bool? isBlock = _data
+                                          ?.object?.blockedUsers
+                                          ?.contains(_data
                                               ?.object
                                               ?.roomMemberOutputDTOList?[index]
-                                              .userUuid
-                                      ? GestureDetector(
-                                          onTapDown: (details) {
-                                            if (widget.RoomOwner == true) {
-                                              print("yes i am ankur ");
-                                              _showPopupMenuWithAddOwner(
-                                                  index,
-                                                  details.globalPosition,
-                                                  context);
-                                            } else {
-                                              print("yes i am meet ");
-                                              _showPopupMenu(
-                                                  index,
-                                                  details.globalPosition,
-                                                  context);
-                                            }
-                                          },
-                                          child: Container(
-                                            height: 50,
-                                            color: Colors.white,
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(15.0),
-                                              child: Container(
-                                                child: CustomImageView(
-                                                  imagePath:
-                                                      ImageConstant.popupimage,
-                                                  height: 20,
-                                                  fit: BoxFit.fill,
-                                                ),
+                                              .userUuid);
+
+                                      print("this i want to check-${isBlock}");
+                                      if (isBlock == true) {
+                                        SnackBar snackBar = SnackBar(
+                                          content: Text('User Blocked.'),
+                                          backgroundColor:
+                                              ColorConstant.primary_color,
+                                        );
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(snackBar);
+                                      } else {
+                                        Navigator.push(context,
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                          return ProfileScreen(
+                                              User_ID:
+                                                  "${_data?.object?.roomMemberOutputDTOList?[index].userUuid}",
+                                              isFollowing: "");
+                                        }));
+                                      }
+                                    },
+                                    child: _data
+                                                ?.object
+                                                ?.roomMemberOutputDTOList?[
+                                                    index]
+                                                .userProfilePic
+                                                ?.isNotEmpty ??
+                                            false
+                                        ? Stack(
+                                            alignment: Alignment.bottomCenter,
+                                            children: [
+                                              CustomImageView(
+                                                url:
+                                                    "${_data?.object?.roomMemberOutputDTOList?[index].userProfilePic}",
+                                                height: 50,
+                                                radius:
+                                                    BorderRadius.circular(25),
+                                                width: 50,
+                                                fit: BoxFit.fill,
                                               ),
-                                            ),
+                                              _data
+                                                          ?.object
+                                                          ?.roomMemberOutputDTOList?[
+                                                              index]
+                                                          .isExpert ==
+                                                      true
+                                                  ? Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 30.0),
+                                                      child: Image.asset(
+                                                        ImageConstant.Star,
+                                                        height: 18,
+                                                      ),
+                                                    )
+                                                  : SizedBox()
+                                            ],
+                                          )
+                                        : Stack(
+                                            alignment: Alignment.bottomCenter,
+                                            children: [
+                                              CustomImageView(
+                                                imagePath:
+                                                    ImageConstant.tomcruse,
+                                                height: 50,
+                                                radius:
+                                                    BorderRadius.circular(25),
+                                                width: 50,
+                                                fit: BoxFit.fill,
+                                              ),
+                                              _data
+                                                          ?.object
+                                                          ?.roomMemberOutputDTOList?[
+                                                              index]
+                                                          .isExpert ==
+                                                      true
+                                                  ? Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 30.0),
+                                                      child: Image.asset(
+                                                        ImageConstant.Star,
+                                                        height: 18,
+                                                      ),
+                                                    )
+                                                  : SizedBox()
+                                            ],
                                           ),
-                                        )
-                                      : widget.RoomOwner == true
-                                          ? Container(
-                                              height: 50,
-                                              child: Column(
-                                                children: [
-                                                  Padding(
-                                                    padding: EdgeInsets.only(
-                                                        bottom: 3, left: 30),
-                                                    child: Align(
-                                                        alignment:
-                                                            Alignment.center,
-                                                        child: Text(
-                                                          "Admin ",
-                                                          style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color: ColorConstant
-                                                                .primary_color,
-                                                            // fontFamily: "outfit",
-                                                            // fontSize: 15,
-                                                          ),
-                                                        )),
-                                                  ),
-                                                  GestureDetector(
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      bool? isBlock = _data
+                                          ?.object?.blockedUsers
+                                          ?.contains(_data
+                                              ?.object
+                                              ?.roomMemberOutputDTOList?[index]
+                                              .userUuid);
+
+                                      print("this i want to check-${isBlock}");
+                                      if (isBlock == true) {
+                                        SnackBar snackBar = SnackBar(
+                                          content: Text('User Blocked.'),
+                                          backgroundColor:
+                                              ColorConstant.primary_color,
+                                        );
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(snackBar);
+                                      } else {
+                                        Navigator.push(context,
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                          return ProfileScreen(
+                                              User_ID:
+                                                  "${_data?.object?.roomMemberOutputDTOList?[index].userUuid}",
+                                              isFollowing: "");
+                                        }));
+                                      }
+                                    },
+                                    child: Container(
+                                      child: Text(
+                                        "${_data?.object?.roomMemberOutputDTOList?[index].fullName ?? ""}",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
+                                            fontFamily: "outfit",
+                                            fontSize: 15),
+                                      ),
+                                    ),
+                                  ),
+                                  // _data?.object?[index].isExpert == true
+                                  //     ? Container(
+                                  //         color:ColorConstant.primary_color,
+                                  //         height: 20,
+                                  //         width: 20,
+                                  //       )
+                                  //     : SizedBox(),
+                                  Spacer(),
+                                  _data?.object?.roomMemberOutputDTOList?[index]
+                                              .isAdmin ==
+                                          true
+                                      ? Container(
+                                          height: 50,
+                                          child: Column(
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    bottom: 3, left: 50),
+                                                child: Align(
+                                                    alignment: Alignment.center,
+                                                    child: Text(
+                                                      "Admin",
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: ColorConstant
+                                                            .primary_color,
+                                                        // fontFamily: "outfit",
+                                                        // fontSize: 15,
+                                                      ),
+                                                    )),
+                                              ),
+                                              User_ID ==
+                                                      _data
+                                                          ?.object
+                                                          ?.roomMemberOutputDTOList?[
+                                                              index]
+                                                          .userUuid
+                                                  ? GestureDetector(
                                                       onTap: () {
-                                                        if (widget
-                                                                .RoomOwnerCount >
+                                                        if ((_data
+                                                                    ?.object
+                                                                    ?.roomMemberOutputDTOList
+                                                                    ?.length ??
+                                                                0) <=
                                                             1) {
-                                                          showDialog(
+                                                          /*   showDialog(
                                                               context: context,
                                                               builder:
                                                                   (context) {
@@ -922,7 +483,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                                               height: 10,
                                                                             ),
                                                                             Text(
-                                                                              "Delete Room",
+                                                                              "Exit Room",
                                                                               style: TextStyle(
                                                                                 fontFamily: 'outfit',
                                                                                 fontSize: 20,
@@ -1000,29 +561,168 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                                     ),
                                                                   ),
                                                                 );
-                                                              });
+                                                              }); */
+                                                          setState(() {
+                                                            exitDailog = true;
+                                                          });
                                                         } else {
-                                                          showDialog(
-                                                              context: context,
-                                                              builder: (_) =>
-                                                                  AssignAdminScreenn(
-                                                                    DeleteFlag:
-                                                                        true,
-                                                                    roomID: widget
-                                                                        .room_Id,
-                                                                    data: _data,
-                                                                    RoomOwnerCount:
-                                                                        widget
-                                                                            .RoomOwnerCount,
-                                                                  )).then((value) =>
-                                                              getUserSavedData());
+                                                          if (widget
+                                                                  .RoomOwnerCount >
+                                                              1) {
+                                                            /*   showDialog(
+                                                                context:
+                                                                    context,
+                                                                builder:
+                                                                    (context) {
+                                                                  return Center(
+                                                                    child:
+                                                                        Container(
+                                                                      color: Colors
+                                                                          .white,
+                                                                      margin: EdgeInsets.only(
+                                                                          left:
+                                                                              20,
+                                                                          right:
+                                                                              20),
+                                                                      height:
+                                                                          200,
+                                                                      width:
+                                                                          _width,
+                                                                      // color: Colors.amber,
+                                                                      child: BlocConsumer<
+                                                                          GetAllPrivateRoomCubit,
+                                                                          GetAllPrivateRoomState>(
+                                                                        listener:
+                                                                            (context,
+                                                                                state) {
+                                                                          if (state
+                                                                              is DeleteRoomLoadedState) {
+                                                                            SnackBar
+                                                                                snackBar =
+                                                                                SnackBar(
+                                                                              content: Text(state.DeleteRoom.object ?? ""),
+                                                                              backgroundColor: ColorConstant.primary_color,
+                                                                            );
+                                                                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+                                                                            Navigator.pop(context);
+                                                                          }
+                                                                        },
+                                                                        builder:
+                                                                            (context,
+                                                                                state) {
+                                                                          return Column(
+                                                                            children: [
+                                                                              SizedBox(
+                                                                                height: 10,
+                                                                              ),
+                                                                              Text(
+                                                                                "Exit Room",
+                                                                                style: TextStyle(
+                                                                                  fontFamily: 'outfit',
+                                                                                  fontSize: 20,
+                                                                                  color: Colors.black,
+                                                                                  fontWeight: FontWeight.bold,
+                                                                                ),
+                                                                              ),
+                                                                              Divider(
+                                                                                color: Colors.grey,
+                                                                              ),
+                                                                              SizedBox(
+                                                                                height: 5,
+                                                                              ),
+                                                                              Center(
+                                                                                  child: Text(
+                                                                                "Are You Sure You Want To Exit This Room",
+                                                                                style: TextStyle(
+                                                                                  fontFamily: 'outfit',
+                                                                                  fontSize: 15,
+                                                                                  color: Colors.black,
+                                                                                  fontWeight: FontWeight.w500,
+                                                                                ),
+                                                                              )),
+                                                                              SizedBox(
+                                                                                height: 50,
+                                                                              ),
+                                                                              Row(
+                                                                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                                                children: [
+                                                                                  GestureDetector(
+                                                                                    onTap: () => Navigator.pop(context),
+                                                                                    child: Container(
+                                                                                      height: 43,
+                                                                                      width: _width / 3.5,
+                                                                                      decoration: BoxDecoration(color: Colors.transparent, border: Border.all(color: Colors.grey.shade400), borderRadius: BorderRadius.circular(10)),
+                                                                                      child: Center(
+                                                                                          child: Text(
+                                                                                        "Cancel",
+                                                                                        style: TextStyle(
+                                                                                          fontFamily: 'outfit',
+                                                                                          fontSize: 15,
+                                                                                          color: ColorConstant.primary_color,
+                                                                                          fontWeight: FontWeight.w400,
+                                                                                        ),
+                                                                                      )),
+                                                                                    ),
+                                                                                  ),
+                                                                                  GestureDetector(
+                                                                                    onTap: () {
+                                                                                      BlocProvider.of<GetAllPrivateRoomCubit>(context).DeleteRoomm(widget.room_Id, 'Exit', context);
+
+                                                                                      Navigator.pop(context);
+                                                                                    },
+                                                                                    child: Container(
+                                                                                      height: 43,
+                                                                                      width: _width / 3.5,
+                                                                                      decoration: BoxDecoration(color: ColorConstant.primary_color, borderRadius: BorderRadius.circular(10)),
+                                                                                      child: Center(
+                                                                                          child: Text(
+                                                                                        "Exit",
+                                                                                        style: TextStyle(
+                                                                                          fontFamily: 'outfit',
+                                                                                          fontSize: 15,
+                                                                                          color: Colors.white,
+                                                                                          fontWeight: FontWeight.w400,
+                                                                                        ),
+                                                                                      )),
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                            ],
+                                                                          );
+                                                                        },
+                                                                      ),
+                                                                    ),
+                                                                  );
+                                                                }); */
+                                                            setState(() {
+                                                              exitDailog = true;
+                                                            });
+                                                          } else {
+                                                            showDialog(
+                                                                context:
+                                                                    context,
+                                                                builder: (_) =>
+                                                                    AssignAdminScreenn(
+                                                                      DeleteFlag:
+                                                                          true,
+                                                                      roomID: widget
+                                                                          .room_Id,
+                                                                      data:
+                                                                          _data,
+                                                                      RoomOwnerCount:
+                                                                          widget
+                                                                              .RoomOwnerCount,
+                                                                    ));
+                                                          }
                                                         }
                                                       },
                                                       child: Container(
                                                         height: 25,
                                                         alignment:
                                                             Alignment.center,
-                                                        width: 120,
+                                                        width: 90,
                                                         margin: EdgeInsets.only(
                                                             bottom: 5),
                                                         decoration: BoxDecoration(
@@ -1049,10 +749,10 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                               ),
                                                             ),
                                                             SizedBox(
-                                                              width: 10,
+                                                              width: 5,
                                                             ),
                                                             Text(
-                                                              'Delete Room',
+                                                              'Exit Room',
                                                               style: TextStyle(
                                                                   fontFamily:
                                                                       "outfit",
@@ -1066,15 +766,73 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                           ],
                                                         ),
                                                       ))
-                                                ],
-                                              ),
-                                            )
-                                          : SizedBox() /* GestureDetector(
+                                                  : Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 75),
+                                                      child: GestureDetector(
+                                                        onTapDown: (details) {
+                                                          print(
+                                                              "yes i am jinal ");
+                                                          _showPopupMenu(
+                                                              index,
+                                                              details
+                                                                  .globalPosition,
+                                                              context);
+                                                        },
+                                                        child: Container(
+                                                          height: 30,
+                                                          width: 30,
+                                                          color: Color.fromARGB(
+                                                              255,
+                                                              255,
+                                                              255,
+                                                              255),
+                                                          child: Center(
+                                                            child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(5.0),
+                                                              child: Container(
+                                                                child:
+                                                                    CustomImageView(
+                                                                  imagePath:
+                                                                      ImageConstant
+                                                                          .popupimage,
+                                                                  height: 20,
+                                                                  fit: BoxFit
+                                                                      .fill,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    )
+                                            ],
+                                          ),
+                                        )
+                                      : widget.CreateUserID !=
+                                              _data
+                                                  ?.object
+                                                  ?.roomMemberOutputDTOList?[
+                                                      index]
+                                                  .userUuid
+                                          ? GestureDetector(
                                               onTapDown: (details) {
-                                                /* _ExitRoom(
-                                                    index,
-                                                    details.globalPosition,
-                                                    context); */
+                                                if (widget.RoomOwner == true) {
+                                                  print("yes i am ankur ");
+                                                  _showPopupMenuWithAddOwner(
+                                                      index,
+                                                      details.globalPosition,
+                                                      context);
+                                                } else {
+                                                  print("yes i am meet ");
+                                                  _showPopupMenu(
+                                                      index,
+                                                      details.globalPosition,
+                                                      context);
+                                                }
                                               },
                                               child: Container(
                                                 height: 50,
@@ -1092,219 +850,500 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                   ),
                                                 ),
                                               ),
-                                            ) */
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-                widget.MoveNotification == true
-                    ? SizedBox()
-                    : widget.RoomOwner == false
-                        ? GestureDetector(
-                            onTap: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return Center(
-                                      child: Container(
-                                        color: Colors.white,
-                                        margin: EdgeInsets.only(
-                                            left: 20, right: 20),
-                                        height: 200,
-                                        width: _width,
-                                        // color: Colors.amber,
-                                        child: BlocConsumer<ViewDetailsCubit,
-                                            ViewDeatilsState>(
-                                          listener: (context, state) {
-                                            if (state is ExitUserLoadedState) {
-                                              SnackBar snackBar = SnackBar(
-                                                content: Text(state
-                                                        .ExitUserModel
-                                                        .object
-                                                        ?.message ??
-                                                    ""),
-                                                backgroundColor:
-                                                    ColorConstant.primary_color,
-                                              );
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(snackBar);
-
-                                              Navigator.pop(context);
-                                            }
-                                          },
-                                          builder: (context, state) {
-                                            return Column(
-                                              children: [
-                                                SizedBox(
-                                                  height: 10,
-                                                ),
-                                                Text(
-                                                  "Room Exit",
-                                                  style: TextStyle(
-                                                    fontFamily: 'outfit',
-                                                    fontSize: 20,
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                                Divider(
-                                                  color: Colors.grey,
-                                                ),
-                                                SizedBox(
-                                                  height: 5,
-                                                ),
-                                                Center(
-                                                    child: Text(
-                                                  "Are You Sure Exit This Room",
-                                                  style: TextStyle(
-                                                    fontFamily: 'outfit',
-                                                    fontSize: 15,
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                )),
-                                                SizedBox(
+                                            )
+                                          : widget.RoomOwner == true
+                                              ? Container(
                                                   height: 50,
-                                                ),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceEvenly,
-                                                  children: [
-                                                    GestureDetector(
-                                                      onTap: () =>
-                                                          Navigator.pop(
-                                                              context),
-                                                      child: Container(
-                                                        height: 43,
-                                                        width: _width / 3.5,
-                                                        decoration: BoxDecoration(
-                                                            color: Colors
-                                                                .transparent,
-                                                            border: Border.all(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade400),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        10)),
-                                                        child: Center(
+                                                  child: Column(
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                bottom: 3,
+                                                                left: 30),
+                                                        child: Align(
+                                                            alignment: Alignment
+                                                                .center,
                                                             child: Text(
-                                                          "Cancel",
-                                                          style: TextStyle(
-                                                            fontFamily:
-                                                                'outfit',
-                                                            fontSize: 15,
-                                                            color: ColorConstant
-                                                                .primary_color,
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                          ),
-                                                        )),
+                                                              "Admin ",
+                                                              style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                color: ColorConstant
+                                                                    .primary_color,
+                                                                // fontFamily: "outfit",
+                                                                // fontSize: 15,
+                                                              ),
+                                                            )),
+                                                      ),
+                                                      GestureDetector(
+                                                          onTap: () {
+                                                            if (widget
+                                                                    .RoomOwnerCount >
+                                                                1) {
+                                                              showDialog(
+                                                                  context:
+                                                                      context,
+                                                                  builder:
+                                                                      (context) {
+                                                                    return Center(
+                                                                      child:
+                                                                          Container(
+                                                                        color: Colors
+                                                                            .white,
+                                                                        margin: EdgeInsets.only(
+                                                                            left:
+                                                                                20,
+                                                                            right:
+                                                                                20),
+                                                                        height:
+                                                                            200,
+                                                                        width:
+                                                                            _width,
+                                                                        // color: Colors.amber,
+                                                                        child: BlocConsumer<
+                                                                            GetAllPrivateRoomCubit,
+                                                                            GetAllPrivateRoomState>(
+                                                                          listener:
+                                                                              (context, state) {
+                                                                            if (state
+                                                                                is DeleteRoomLoadedState) {
+                                                                              SnackBar snackBar = SnackBar(
+                                                                                content: Text(state.DeleteRoom.object ?? ""),
+                                                                                backgroundColor: ColorConstant.primary_color,
+                                                                              );
+                                                                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+                                                                              Navigator.pop(context);
+                                                                            }
+                                                                          },
+                                                                          builder:
+                                                                              (context, state) {
+                                                                            return Column(
+                                                                              children: [
+                                                                                SizedBox(
+                                                                                  height: 10,
+                                                                                ),
+                                                                                Text(
+                                                                                  "Delete Room",
+                                                                                  style: TextStyle(
+                                                                                    fontFamily: 'outfit',
+                                                                                    fontSize: 20,
+                                                                                    color: Colors.black,
+                                                                                    fontWeight: FontWeight.bold,
+                                                                                  ),
+                                                                                ),
+                                                                                Divider(
+                                                                                  color: Colors.grey,
+                                                                                ),
+                                                                                SizedBox(
+                                                                                  height: 5,
+                                                                                ),
+                                                                                Center(
+                                                                                    child: Text(
+                                                                                  "Are You Sure You Want To Exit This Room",
+                                                                                  style: TextStyle(
+                                                                                    fontFamily: 'outfit',
+                                                                                    fontSize: 15,
+                                                                                    color: Colors.black,
+                                                                                    fontWeight: FontWeight.w500,
+                                                                                  ),
+                                                                                )),
+                                                                                SizedBox(
+                                                                                  height: 50,
+                                                                                ),
+                                                                                Row(
+                                                                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                                                  children: [
+                                                                                    GestureDetector(
+                                                                                      onTap: () => Navigator.pop(context),
+                                                                                      child: Container(
+                                                                                        height: 43,
+                                                                                        width: _width / 3.5,
+                                                                                        decoration: BoxDecoration(color: Colors.transparent, border: Border.all(color: Colors.grey.shade400), borderRadius: BorderRadius.circular(10)),
+                                                                                        child: Center(
+                                                                                            child: Text(
+                                                                                          "Cancel",
+                                                                                          style: TextStyle(
+                                                                                            fontFamily: 'outfit',
+                                                                                            fontSize: 15,
+                                                                                            color: ColorConstant.primary_color,
+                                                                                            fontWeight: FontWeight.w400,
+                                                                                          ),
+                                                                                        )),
+                                                                                      ),
+                                                                                    ),
+                                                                                    GestureDetector(
+                                                                                      onTap: () {
+                                                                                        BlocProvider.of<GetAllPrivateRoomCubit>(context).DeleteRoomm(widget.room_Id, 'Exit', context);
+
+                                                                                        Navigator.pop(context);
+                                                                                      },
+                                                                                      child: Container(
+                                                                                        height: 43,
+                                                                                        width: _width / 3.5,
+                                                                                        decoration: BoxDecoration(color: ColorConstant.primary_color, borderRadius: BorderRadius.circular(10)),
+                                                                                        child: Center(
+                                                                                            child: Text(
+                                                                                          "Exit",
+                                                                                          style: TextStyle(
+                                                                                            fontFamily: 'outfit',
+                                                                                            fontSize: 15,
+                                                                                            color: Colors.white,
+                                                                                            fontWeight: FontWeight.w400,
+                                                                                          ),
+                                                                                        )),
+                                                                                      ),
+                                                                                    ),
+                                                                                  ],
+                                                                                ),
+                                                                              ],
+                                                                            );
+                                                                          },
+                                                                        ),
+                                                                      ),
+                                                                    );
+                                                                  });
+                                                            } else {
+                                                              showDialog(
+                                                                  context:
+                                                                      context,
+                                                                  builder: (_) =>
+                                                                      AssignAdminScreenn(
+                                                                        DeleteFlag:
+                                                                            true,
+                                                                        roomID:
+                                                                            widget.room_Id,
+                                                                        data:
+                                                                            _data,
+                                                                        RoomOwnerCount:
+                                                                            widget.RoomOwnerCount,
+                                                                      )).then(
+                                                                  (value) =>
+                                                                      getUserSavedData());
+                                                            }
+                                                          },
+                                                          child: Container(
+                                                            height: 25,
+                                                            alignment: Alignment
+                                                                .center,
+                                                            width: 120,
+                                                            margin:
+                                                                EdgeInsets.only(
+                                                                    bottom: 5),
+                                                            decoration: BoxDecoration(
+                                                                color: ColorConstant
+                                                                    .primary_color,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            4)),
+                                                            child: Row(
+                                                              children: [
+                                                                Padding(
+                                                                  padding: EdgeInsets
+                                                                      .only(
+                                                                          left:
+                                                                              5),
+                                                                  child:
+                                                                      CustomImageView(
+                                                                    imagePath:
+                                                                        ImageConstant
+                                                                            .delete,
+                                                                    height: 18,
+                                                                    color: Colors
+                                                                        .white,
+                                                                  ),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 10,
+                                                                ),
+                                                                Text(
+                                                                  'Delete Room',
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          "outfit",
+                                                                      fontSize:
+                                                                          12,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      color: Colors
+                                                                          .white),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ))
+                                                    ],
+                                                  ),
+                                                )
+                                              : SizedBox() /* GestureDetector(
+                                                  onTapDown: (details) {
+                                                    /* _ExitRoom(
+                                                        index,
+                                                        details.globalPosition,
+                                                        context); */
+                                                  },
+                                                  child: Container(
+                                                    height: 50,
+                                                    color: Colors.white,
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.all(
+                                                          15.0),
+                                                      child: Container(
+                                                        child: CustomImageView(
+                                                          imagePath: ImageConstant
+                                                              .popupimage,
+                                                          height: 20,
+                                                          fit: BoxFit.fill,
+                                                        ),
                                                       ),
                                                     ),
-                                                    GestureDetector(
-                                                      onTap: () {
-                                                        // BlocProvider.of<GetAllPrivateRoomCubit>(context).DeleteRoomm(widget.room_Id, context);
-
-                                                        print("User removed!!");
-                                                        BlocProvider.of<
-                                                                    ViewDetailsCubit>(
-                                                                context)
-                                                            .ExituserAPI(
-                                                          widget.room_Id,
-                                                          context,
-                                                        );
-
-                                                        Navigator.pop(context);
-                                                      },
-                                                      child: Container(
-                                                        height: 43,
-                                                        width: _width / 3.5,
-                                                        decoration: BoxDecoration(
-                                                            color: ColorConstant
-                                                                .primary_color,
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        10)),
-                                                        child: Center(
-                                                            child: Text(
-                                                          "Exit",
-                                                          style: TextStyle(
-                                                            fontFamily:
-                                                                'outfit',
-                                                            fontSize: 15,
-                                                            color: Colors.white,
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                          ),
-                                                        )),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                    );
-                                  });
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 100),
-                              child: Container(
-                                height: _height / 15,
-                                width: _width / 1.2,
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.grey),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: CustomImageView(
-                                        imagePath: ImageConstant.ExitRoom,
-                                        height: 30,
-                                        // radius: BorderRadius.circular(25),
-                                        width: 30,
-                                        fit: BoxFit.fill,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        "Exit Room",
-                                        style: TextStyle(color: Colors.black),
-                                        textScaleFactor: 1.0,
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                                  ),
+                                                ) */
+                                ],
                               ),
                             ),
-                          )
-                        : SizedBox()
-              ],
-            );
-          }
-          return Center(
-            child: Container(
-              margin: EdgeInsets.only(bottom: 100),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Image.asset(ImageConstant.loader,
-                    fit: BoxFit.cover, height: 100.0, width: 100),
-              ),
-            ),
-          );
-        })));
+                          ),
+                        );
+                      },
+                    ),
+                    widget.MoveNotification == true
+                        ? SizedBox()
+                        : widget.RoomOwner == false
+                            ? GestureDetector(
+                                onTap: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return Center(
+                                          child: Container(
+                                            color: Colors.white,
+                                            margin: EdgeInsets.only(
+                                                left: 20, right: 20),
+                                            height: 200,
+                                            width: _width,
+                                            // color: Colors.amber,
+                                            child: BlocConsumer<
+                                                ViewDetailsCubit,
+                                                ViewDeatilsState>(
+                                              listener: (context, state) {
+                                                if (state
+                                                    is ExitUserLoadedState) {
+                                                  SnackBar snackBar = SnackBar(
+                                                    content: Text(state
+                                                            .ExitUserModel
+                                                            .object
+                                                            ?.message ??
+                                                        ""),
+                                                    backgroundColor:
+                                                        ColorConstant
+                                                            .primary_color,
+                                                  );
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(snackBar);
+
+                                                  Navigator.pop(context);
+                                                }
+                                              },
+                                              builder: (context, state) {
+                                                return Column(
+                                                  children: [
+                                                    SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    Text(
+                                                      "Room Exit",
+                                                      style: TextStyle(
+                                                        fontFamily: 'outfit',
+                                                        fontSize: 20,
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                    Divider(
+                                                      color: Colors.grey,
+                                                    ),
+                                                    SizedBox(
+                                                      height: 5,
+                                                    ),
+                                                    Center(
+                                                        child: Text(
+                                                      "Are You Sure Exit This Room",
+                                                      style: TextStyle(
+                                                        fontFamily: 'outfit',
+                                                        fontSize: 15,
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                      ),
+                                                    )),
+                                                    SizedBox(
+                                                      height: 50,
+                                                    ),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceEvenly,
+                                                      children: [
+                                                        GestureDetector(
+                                                          onTap: () =>
+                                                              Navigator.pop(
+                                                                  context),
+                                                          child: Container(
+                                                            height: 43,
+                                                            width: _width / 3.5,
+                                                            decoration: BoxDecoration(
+                                                                color: Colors
+                                                                    .transparent,
+                                                                border: Border.all(
+                                                                    color: Colors
+                                                                        .grey
+                                                                        .shade400),
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10)),
+                                                            child: Center(
+                                                                child: Text(
+                                                              "Cancel",
+                                                              style: TextStyle(
+                                                                fontFamily:
+                                                                    'outfit',
+                                                                fontSize: 15,
+                                                                color: ColorConstant
+                                                                    .primary_color,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                              ),
+                                                            )),
+                                                          ),
+                                                        ),
+                                                        GestureDetector(
+                                                          onTap: () {
+                                                            // BlocProvider.of<GetAllPrivateRoomCubit>(context).DeleteRoomm(widget.room_Id, context);
+
+                                                            print(
+                                                                "User removed!!");
+                                                            BlocProvider.of<
+                                                                        ViewDetailsCubit>(
+                                                                    context)
+                                                                .ExituserAPI(
+                                                              widget.room_Id,
+                                                              context,
+                                                            );
+
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                          child: Container(
+                                                            height: 43,
+                                                            width: _width / 3.5,
+                                                            decoration: BoxDecoration(
+                                                                color: ColorConstant
+                                                                    .primary_color,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10)),
+                                                            child: Center(
+                                                                child: Text(
+                                                              "Exit",
+                                                              style: TextStyle(
+                                                                fontFamily:
+                                                                    'outfit',
+                                                                fontSize: 15,
+                                                                color: Colors
+                                                                    .white,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                              ),
+                                                            )),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                        );
+                                      });
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: 100),
+                                  child: Container(
+                                    height: _height / 15,
+                                    width: _width / 1.2,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.grey),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: CustomImageView(
+                                            imagePath: ImageConstant.ExitRoom,
+                                            height: 30,
+                                            // radius: BorderRadius.circular(25),
+                                            width: 30,
+                                            fit: BoxFit.fill,
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            "Exit Room",
+                                            style:
+                                                TextStyle(color: Colors.black),
+                                            textScaleFactor: 1.0,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : SizedBox()
+                  ],
+                );
+              }
+              return Center(
+                child: Container(
+                  margin: EdgeInsets.only(bottom: 100),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.asset(ImageConstant.loader,
+                        fit: BoxFit.cover, height: 100.0, width: 100),
+                  ),
+                ),
+              );
+            }))),
+        exitDailog == true
+            ? Container(
+                height: _height,
+                width: _width,
+                color: const Color.fromARGB(109, 0, 0, 0),
+                child: Center(
+                  child: ExitRoomDailog(
+                    roomID: widget.room_Id.toString(),
+                    onClose: () {
+                      setState(() {
+                        exitDailog = false;
+                      });
+                    },
+                  ),
+                ),
+              )
+            : SizedBox(),
+      ],
+    );
   }
 
   /*  void _ExitRoom(

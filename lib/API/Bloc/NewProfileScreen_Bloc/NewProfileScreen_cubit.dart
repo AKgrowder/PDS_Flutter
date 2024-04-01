@@ -4,6 +4,10 @@ import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_state.dart';
 import 'package:pds/API/Repo/repository.dart';
 
 class NewProfileSCubit extends Cubit<NewProfileSState> {
+  dynamic gestUserData;
+  dynamic PublicRModel;
+  dynamic PublicRModel1;
+
   NewProfileSCubit() : super(NewProfileSInitialState()) {}
   Future<void> NewProfileSAPI(
     BuildContext context,
@@ -28,20 +32,54 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
     }
   }
 
-  Future<void> GetAppPostAPI(BuildContext context, String userUid) async {
-    dynamic PublicRModel;
+  Future<void> GetAppPostAPI(
+      BuildContext context, String pageNumber, String userUid) async {
     try {
       emit(NewProfileSLoadingState());
-      PublicRModel = await Repository().GetAppPostAPI(context, userUid);
-      if (PublicRModel == "Something Went Wrong, Try After Some Time.") {
-        emit(NewProfileSErrorState("${PublicRModel}"));
+      PublicRModel1 = await Repository().GetAppPostAPI(
+        context,
+        pageNumber,
+        userUid,
+      );
+      if (PublicRModel1 == "Something Went Wrong, Try After Some Time.") {
+        emit(NewProfileSErrorState("${PublicRModel1}"));
       } else {
-        if (PublicRModel.success == true) {
-          emit(GetAppPostByUserLoadedState(PublicRModel));
+        if (PublicRModel1.success == true) {
+          emit(GetAppPostByUserLoadedState(PublicRModel1));
         }
       }
     } catch (e) {
-      emit(NewProfileSErrorState(PublicRModel));
+      emit(NewProfileSErrorState(PublicRModel1));
+    }
+  }
+
+  Future<void> GetAppPostAPIAPIPagantion(
+      BuildContext context, String pageNumber, String userUid,
+      {bool showAlert = false}) async {
+    dynamic gestUserDatasetUp;
+    try {
+      print("showAlert-->$showAlert");
+      showAlert == true ? emit(NewProfileSLoadingState()) : SizedBox();
+      gestUserDatasetUp = await Repository().GetAppPostAPI(
+        context,
+        pageNumber,
+        userUid,
+      );
+      if (gestUserDatasetUp == "Something Went Wrong, Try After Some Time.") {
+        emit(NewProfileSErrorState("${gestUserDatasetUp}"));
+      } else {
+        if (gestUserDatasetUp.success == true) {
+          PublicRModel1.object.content.addAll(gestUserDatasetUp.object.content);
+          PublicRModel1.object.pageable.pageNumber =
+              gestUserDatasetUp.object.pageable.pageNumber;
+          PublicRModel1.object.totalElements =
+              gestUserDatasetUp.object.totalElements;
+          emit(GetAppPostByUserLoadedState(PublicRModel1));
+        }
+      }
+    } catch (e) {
+      // print('errorstate-$e');
+      emit(NewProfileSErrorState(gestUserData));
     }
   }
 
