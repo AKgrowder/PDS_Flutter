@@ -1,10 +1,12 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
-import 'package:pds/Market_place/MP_Prasantation/platform%20charges%20details/platformchargesdetails.dart';
+import 'package:pds/Market_place/MP_Prasantation/Charge_Payment_Screen/charge_payment_screen.dart';
+import 'package:pds/Market_place/commenWiget.dart/commenButton.dart';
 import 'package:pds/Market_place/commenWiget.dart/commenFlushbar.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/widgets/custom_image_view.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/utils/color_constant.dart';
 
@@ -257,12 +259,11 @@ class _ChooseCategoryScreenState extends State<ChooseCategoryScreen> {
                         Flexible(
                           child: Center(
                             child: Padding(
-                              padding: const EdgeInsets.only(top: 3,left: 10),
+                              padding: const EdgeInsets.only(top: 3, left: 10),
                               child: Text(
                                 'You are a Part Of Packaging Community in InPackaging Knowledge Forum',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                            
                                     color: Colors.black,
                                     fontSize: 15,
                                     fontFamily: 'outfit',
@@ -352,16 +353,8 @@ class _ChooseCategoryScreenState extends State<ChooseCategoryScreen> {
                         ))
                     .toList(),
               ),
-              GestureDetector(
-                onTap: onSubmitMethod,
-                child: Container(
+              CommonButton(
                   margin: EdgeInsets.all(10),
-                  height: 40,
-                  // width: _width / 1.2,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: ColorConstant.primary_color,
-                  ),
                   child: Center(
                       child: Text(
                     "Next",
@@ -371,34 +364,44 @@ class _ChooseCategoryScreenState extends State<ChooseCategoryScreen> {
                         fontSize: 18,
                         fontWeight: FontWeight.w500),
                   )),
-                ),
-              ),
+                  height: 40,
+                  radius: 8,
+                  color: ColorConstant.primary_color,
+                  onTap: onSubmitMethod)
             ],
           ),
         ));
   }
 
-  onSubmitMethod() {
+  onSubmitMethod() async {
     if (rawMatrialMarketPlace.any((element) => element['isSelcted']) == true &&
         marketplaceProductsServices.any((element) => element['isSelcted']) ==
             true) {
       print("rawMatrialchedck-${widget.eninty}");
+
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => PlatformCharges(
+              builder: (context) => PaymentAndChargeScreen(
                     category: widget.eninty,
+                    rmSelcetion: rawMatrialMarketPlace
+                        .firstWhere((element) => element['isSelcted'])['value'],
+                    psSelcetion: marketplaceProductsServices
+                        .firstWhere((element) => element['isSelcted'])['value'],
                   )));
     } else if (rawMatrialMarketPlace.any((element) => element['isSelcted']) ==
             true &&
         marketplaceProductsServices.every((element) => element['isSelcted']) ==
             false) {
       print("RAW_MATERIAL_MARKET_PLACE");
+
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => PlatformCharges(
+              builder: (context) => PaymentAndChargeScreen(
                     category: 'RAW_MATERIAL_MARKET_PLACE',
+                    rmSelcetion: rawMatrialMarketPlace
+                        .firstWhere((element) => element['isSelcted'])['value'],
                   )));
     } else if (marketplaceProductsServices
                 .any((element) => element['isSelcted']) ==
@@ -409,8 +412,10 @@ class _ChooseCategoryScreenState extends State<ChooseCategoryScreen> {
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => PlatformCharges(
+              builder: (context) => PaymentAndChargeScreen(
                     category: 'PACKAGING_PRODUCT_SERVICES',
+                    psSelcetion: marketplaceProductsServices
+                        .firstWhere((element) => element['isSelcted'])['value'],
                   )));
     } else if (!rawMatrialMarketPlace.any((element) => element['isSelcted']) ==
             true &&

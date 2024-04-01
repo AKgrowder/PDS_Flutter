@@ -327,6 +327,7 @@ import 'package:pds/API/Bloc/my_account_Bloc/my_account_cubit.dart';
 import 'package:pds/API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import 'package:pds/API/Bloc/sherinvite_Block/sherinvite_cubit.dart';
 import 'package:pds/API/Bloc/viewStory_Bloc/viewStory_cubit.dart';
+import 'package:pds/Market_place/Cubit/LoginCubit.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/firebase_option.dart';
 import 'package:pds/presentation/%20new/OpenSavePostImage.dart';
@@ -614,6 +615,9 @@ DateTime startTime = DateTime.now();
           create: (context) => RateUsCubit(),
         ), BlocProvider<DeleteUserCubit>(
           create: (context) => DeleteUserCubit(),
+        ), 
+         BlocProvider<LoginRegisterCubit>(
+          create: (context) => LoginRegisterCubit(),
         ),  
       ],
       child: Portal(

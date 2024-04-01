@@ -1,37 +1,43 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
-import 'package:pds/core/utils/color_constant.dart';
 
 class CommonButton extends StatelessWidget {
-  final VoidCallback onPressed;
-  final String text;
   final double height;
-  final double width;
-  final EdgeInsetsGeometry? margin;
-  final EdgeInsetsGeometry? padding;
-  final Color? color;
-  const CommonButton({
+   double? width;
+  EdgeInsetsGeometry? margin;
+  EdgeInsetsGeometry? padding;
+  final Color color;
+  double? radius;
+  Widget? child;
+  final void Function() onTap;
+
+  CommonButton({
     Key? key,
-    required this.onPressed,
-    required this.text,
     required this.height,
-    required this.width,
-    
+     this.width,
     this.margin,
     this.padding,
-    this.color
-
+    required this.color,
+    this.radius,
+    this.child,
+    required this.onTap,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: height,
-      width: width,
-      margin: margin,
-      padding: padding,
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(10.0),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: height,
+        width: width,
+        margin: margin,
+        padding: padding,
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(radius ?? 0.0),
+        ),
+        child: child,
       ),
     );
   }

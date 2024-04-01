@@ -235,11 +235,11 @@ class _RmLoginScreenState extends State<RmLoginScreen> {
             ),
             GestureDetector(
               onTap: () {
-                Navigator.push(
+               /*  Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => MobileNumberLoginScreen(),
-                    ));
+                    )); */
               },
               child: GestureDetector(
                 child: Container(
