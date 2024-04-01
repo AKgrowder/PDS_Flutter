@@ -1,0 +1,1 @@
+enum ApiData {Success,Failed}

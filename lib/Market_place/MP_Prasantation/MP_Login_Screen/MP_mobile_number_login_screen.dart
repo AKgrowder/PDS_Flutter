@@ -1,17 +1,10 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pds/Market_place/MP_Dilogs/MP_singup_flow_dilogs.dart';
-import 'package:pds/widgets/custom_image_view.dart';
 import 'package:pds/widgets/custom_text_form_field.dart';
-import 'package:pinput/pinput.dart';
-
 import '../../../core/utils/color_constant.dart';
-import '../../../core/utils/image_constant.dart';
 import '../../../presentation/policy_of_company/policy_screen.dart';
 import '../../../presentation/policy_of_company/privecy_policy.dart';
-import '../../../theme/app_decoration.dart';
 import '../../../theme/theme_helper.dart';
 
 class MobileNumberLoginScreen extends StatefulWidget {
@@ -85,7 +78,6 @@ class _MobileNumberLoginScreenState extends State<MobileNumberLoginScreen> {
               ),
               Text(
                 "Mobile Number",
-
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 15,
@@ -299,4 +291,3 @@ class _MobileNumberLoginScreenState extends State<MobileNumberLoginScreen> {
     );
   }
 }
-

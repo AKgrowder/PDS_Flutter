@@ -133,8 +133,8 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
         body: BlocConsumer<HashTagCubit, HashTagState>(
           listener: (context, state) {
             if (state is HashTagErrorState) {
-              apiDataSetup = true;
-              // print("i want error print${state.error}");
+              apiDataSetup = false;
+              print("i want error print${state.error}");
               // SnackBar snackBar = SnackBar(
               //   content: Text(state.error),
               //   backgroundColor: ColorConstant.primary_color,
