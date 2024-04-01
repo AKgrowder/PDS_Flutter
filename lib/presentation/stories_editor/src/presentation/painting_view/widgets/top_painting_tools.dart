@@ -36,8 +36,8 @@ class _TopPaintingToolsState extends State<TopPaintingTools> {
                     child: Transform.scale(
                         scale: 0.6,
                         child: const ImageIcon(
-                          AssetImage('assets/icons/return.png',
-                              package: 'stories_editor'),
+                          AssetImage('assets/images/return.png',
+                              ),
                           color: Colors.white,
                         )),
                   ),
@@ -58,8 +58,8 @@ class _TopPaintingToolsState extends State<TopPaintingTools> {
                   child: Transform.scale(
                       scale: 1.2,
                       child: ImageIcon(
-                        const AssetImage('assets/icons/pen.png',
-                            package: 'stories_editor'),
+                        const AssetImage('assets/images/pen.png',
+                            ),
                         color: paintingNotifier.paintingType == PaintingType.pen
                             ? Colors.black
                             : Colors.white,
@@ -83,8 +83,8 @@ class _TopPaintingToolsState extends State<TopPaintingTools> {
                   child: Transform.scale(
                       scale: 1.2,
                       child: ImageIcon(
-                        const AssetImage('assets/icons/marker.png',
-                            package: 'stories_editor'),
+                        const AssetImage('assets/images/marker.png',
+                            ),
                         color:
                             paintingNotifier.paintingType == PaintingType.marker
                                 ? Colors.black
@@ -109,8 +109,8 @@ class _TopPaintingToolsState extends State<TopPaintingTools> {
                   child: Transform.scale(
                       scale: 1.1,
                       child: ImageIcon(
-                        const AssetImage('assets/icons/neon.png',
-                            package: 'stories_editor'),
+                        const AssetImage('assets/images/neon.png',
+                            ),
                         color:
                             paintingNotifier.paintingType == PaintingType.neon
                                 ? Colors.black
@@ -129,8 +129,8 @@ class _TopPaintingToolsState extends State<TopPaintingTools> {
                   child: Transform.scale(
                       scale: 0.7,
                       child: const ImageIcon(
-                        AssetImage('assets/icons/check.png',
-                            package: 'stories_editor'),
+                        AssetImage('assets/images/check.png',
+                            ),
                         color: Colors.white,
                       )),
                 ),

@@ -40,14 +40,14 @@ class TopTextTools extends StatelessWidget {
                         scale: !editorNotifier.isFontFamily ? 0.8 : 1.3,
                         child: !editorNotifier.isFontFamily
                             ? const ImageIcon(
-                                AssetImage('assets/icons/text.png',
-                                    package: 'stories_editor'),
+                                AssetImage('assets/images/text.png',
+                                    ),
                                 size: 20,
                                 color: Colors.white,
                               )
                             : Image.asset(
-                                'assets/icons/circular_gradient.png',
-                                package: 'stories_editor',
+                                'assets/images/circular_gradient.png',
+
                               )),
                   ),
 
@@ -75,8 +75,8 @@ class TopTextTools extends StatelessWidget {
                           child: Padding(
                             padding: EdgeInsets.only(left: 5, bottom: 3),
                             child: ImageIcon(
-                              AssetImage('assets/icons/font_backGround.png',
-                                  package: 'stories_editor'),
+                              AssetImage('assets/images/font_backGround.png',
+                                  ),
                               color: Colors.white,
                             ),
                           ),
@@ -116,8 +116,8 @@ class TopTextTools extends StatelessWidget {
                   //         child: Padding(
                   //           padding: EdgeInsets.all(0),
                   //           child: ImageIcon(
-                  //             AssetImage('assets/icons/video_trim.png',
-                  //                 package: 'stories_editor'),
+                  //             AssetImage('assets/images/video_trim.png',
+                  //                 ),
                   //             color: Colors.white,
                   //           ),
                   //         ),

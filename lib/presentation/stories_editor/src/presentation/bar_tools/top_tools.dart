@@ -79,8 +79,8 @@ class _TopToolsState extends State<TopTools> {
                       }),
                 ToolButton(
                     child: const ImageIcon(
-                      AssetImage('assets/icons/download.png',
-                          package: 'stories_editor'),
+                      AssetImage('assets/images/download.png',
+                          ),
                       color: Colors.white,
                       size: 20,
                     ),
@@ -125,8 +125,8 @@ class _TopToolsState extends State<TopTools> {
                     }),
                 ToolButton(
                   child: const ImageIcon(
-                    AssetImage('assets/icons/stickers.png',
-                        package: 'stories_editor'),
+                    AssetImage('assets/images/stickers.png',
+                        ),
                     color: Colors.white,
                     size: 20,
                   ),
@@ -170,8 +170,8 @@ class _TopToolsState extends State<TopTools> {
                 ),
                 ToolButton(
                     child: const ImageIcon(
-                      AssetImage('assets/icons/draw.png',
-                          package: 'stories_editor'),
+                      AssetImage('assets/images/draw.png',
+                          ),
                       color: Colors.white,
                       size: 20,
                     ),
@@ -182,8 +182,8 @@ class _TopToolsState extends State<TopTools> {
                     }),
                 // ToolButton(
                 //   child: ImageIcon(
-                //     const AssetImage('assets/icons/photo_filter.png',
-                //         package: 'stories_editor'),
+                //     const AssetImage('assets/images/photo_filter.png',
+                //         ),
                 //     color: controlNotifier.isPhotoFilter ? Colors.black : Colors.white,
                 //     size: 20,
                 //   ),
@@ -193,8 +193,8 @@ class _TopToolsState extends State<TopTools> {
                 // ),
                 ToolButton(
                   child: const ImageIcon(
-                    AssetImage('assets/icons/text.png',
-                        package: 'stories_editor'),
+                    AssetImage('assets/images/text.png',
+                        ),
                     color: Colors.white,
                     size: 20,
                   ),

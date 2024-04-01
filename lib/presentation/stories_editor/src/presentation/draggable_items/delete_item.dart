@@ -65,8 +65,8 @@ class DeleteItem extends StatelessWidget {
                       borderRadius: BorderRadius.circular(50),
                     ),
                     child: const ImageIcon(
-                      AssetImage('assets/icons/trash.png',
-                          package: 'stories_editor'),
+                      AssetImage('assets/images/trash.png',
+                          ),
                       color: Colors.white,
                       size: 23,
                     ),
